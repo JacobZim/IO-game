@@ -15,7 +15,9 @@ module.exports = Object.freeze({
   MSG_TYPES: {
     JOIN_GAME: 'join_game',
     GAME_UPDATE: 'update',
-    INPUT: 'input',
+    MOUSE_INPUT: 'mouse-input',
+    MOUSE_CLICK: 'mouse-click',
+    KEYBOARD_INPUT: 'keyboard-input',
     GAME_OVER: 'dead',
   },
 });

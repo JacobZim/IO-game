@@ -76,7 +76,7 @@ function renderPlayer(me, player) {
   context.translate(canvasX, canvasY);
   context.rotate(direction);
   context.drawImage(
-    getAsset('ship.svg'),
+    getAsset('circleManExperiment.svg'),
     -PLAYER_RADIUS,
     -PLAYER_RADIUS,
     PLAYER_RADIUS * 2,
@@ -104,7 +104,7 @@ function renderPlayer(me, player) {
 function renderBullet(me, bullet) {
   const { x, y } = bullet;
   context.drawImage(
-    getAsset('bullet.svg'),
+    getAsset('mySmileyBullet.png'),
     canvas.width / 2 + x - me.x - BULLET_RADIUS,
     canvas.height / 2 + y - me.y - BULLET_RADIUS,
     BULLET_RADIUS * 2,

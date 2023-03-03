@@ -7,6 +7,7 @@ class Game {
     this.sockets = {};
     this.players = {};
     this.bullets = [];
+    this.structures = [];
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     setInterval(this.update.bind(this), 1000 / 60);
@@ -26,12 +27,35 @@ class Game {
     delete this.players[socket.id];
   }
 
-  handleInput(socket, dir) {
+  handleInputMouse(socket, dir) {
     if (this.players[socket.id]) {
       this.players[socket.id].setDirection(dir);
     }
   }
+  handleInputKeys(socket, keysDown, keysUp) {
+    let player = this.players[socket.id];
+    if (player) {
+      if (keysDown.includes('w')) player.moveU = true;
+      if (keysDown.includes('a')) player.moveL = true;
+      if (keysDown.includes('s')) player.moveD = true;
+      if (keysDown.includes('d')) player.moveR = true;
+      if (keysDown.includes('q')) pass;
+      if (keysDown.includes('e')) pass;
 
+      if (keysUp.includes('w')) player.moveU = false;
+      if (keysUp.includes('a')) player.moveL = false;
+      if (keysUp.includes('s')) player.moveD = false;
+      if (keysUp.includes('d')) player.moveR = false;
+      if (keysUp.includes('q')) pass;
+      if (keysUp.includes('e')) pass;
+    }
+  }
+  handleInputMouseClick(socket, pressed) {
+    let player = this.players[socket.id];
+    if (player) {
+      player.primary_firing = pressed;
+    }
+  }
   update() {
     // Calculate time elapsed
     const now = Date.now();

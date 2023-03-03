@@ -9,11 +9,16 @@ class Player extends ObjectClass {
     this.hp = Constants.PLAYER_MAX_HP;
     this.fireCooldown = 0;
     this.score = 0;
+    this.moveR = false;
+    this.moveL = false;
+    this.moveU = false;
+    this.moveD = false;
+    this.primary_firing = false;
   }
 
   // Returns a newly created bullet, or null.
   update(dt) {
-    super.update(dt);
+    this.move(dt);
 
     // Update score
     this.score += dt * Constants.SCORE_PER_SECOND;
@@ -24,12 +29,36 @@ class Player extends ObjectClass {
 
     // Fire a bullet, if needed
     this.fireCooldown -= dt;
-    if (this.fireCooldown <= 0) {
-      this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN;
+    if (this.fireCooldown <= 0 && this.primary_firing) {
+      this.fireCooldown = Constants.PLAYER_FIRE_COOLDOWN;
       return new Bullet(this.id, this.x, this.y, this.direction);
     }
 
     return null;
+  }
+
+  move(dt) {
+    const diag = Math.sqrt(2) / 2;
+    if (this.moveR && this.moveU) {
+      this.x += dt * this.speed * diag;
+      this.y -= dt * this.speed * diag;
+    }
+    else if (this.moveR && this.moveD) {
+      this.x += dt * this.speed * diag;
+      this.y += dt * this.speed * diag;
+    }
+    else if (this.moveL && this.moveU) {
+      this.x -= dt * this.speed * diag;
+      this.y -= dt * this.speed * diag;
+    }
+    else if (this.moveL && this.moveD) {
+      this.x -= dt * this.speed * diag;
+      this.y += dt * this.speed * diag;
+    }
+    else if (this.moveR) this.x += dt * this.speed;
+    else if (this.moveL) this.x -= dt * this.speed;
+    else if (this.moveU) this.y -= dt * this.speed;
+    else if (this.moveD) this.y += dt * this.speed;
   }
 
   takeBulletDamage() {
