@@ -39,30 +39,39 @@ class Player extends ObjectClass {
 
   move(dt) {
     const diag = Math.sqrt(2) / 2;
+    let newX = this.x;
+    let newY = this.y;
+
+    // Calculate new X and Y positions based on keys pressed
     if (this.moveR && this.moveU) {
-      this.x += dt * this.speed * diag;
-      this.y -= dt * this.speed * diag;
+      newX += dt * this.speed * diag;
+      newY -= dt * this.speed * diag;
     }
     else if (this.moveR && this.moveD) {
-      this.x += dt * this.speed * diag;
-      this.y += dt * this.speed * diag;
+      newX += dt * this.speed * diag;
+      newY += dt * this.speed * diag;
     }
     else if (this.moveL && this.moveU) {
-      this.x -= dt * this.speed * diag;
-      this.y -= dt * this.speed * diag;
+      newX -= dt * this.speed * diag;
+      newY -= dt * this.speed * diag;
     }
     else if (this.moveL && this.moveD) {
-      this.x -= dt * this.speed * diag;
-      this.y += dt * this.speed * diag;
+      newX -= dt * this.speed * diag;
+      newY += dt * this.speed * diag;
     }
-    else if (this.moveR) this.x += dt * this.speed;
-    else if (this.moveL) this.x -= dt * this.speed;
-    else if (this.moveU) this.y -= dt * this.speed;
-    else if (this.moveD) this.y += dt * this.speed;
+    else if (this.moveR) newX += dt * this.speed;
+    else if (this.moveL) newX -= dt * this.speed;
+    else if (this.moveU) newY -= dt * this.speed;
+    else if (this.moveD) newY += dt * this.speed;
+
+    // Check if the new X and Y positions collide with anything
+
+    this.x = newX;
+    this.y = newY;
   }
 
-  takeBulletDamage() {
-    this.hp -= Constants.BULLET_DAMAGE;
+  takeDamage(damage) {
+    this.hp -= damage;
   }
 
   onDealtDamage() {

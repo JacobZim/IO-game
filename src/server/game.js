@@ -1,6 +1,6 @@
 const Constants = require('../shared/constants');
 const Player = require('./player');
-const applyCollisions = require('./collisions');
+const Collisions = require('./collisions');
 
 class Game {
   constructor() {
@@ -82,13 +82,14 @@ class Game {
     });
 
     // Apply collisions, give players score for hitting bullets
-    const destroyedBullets = applyCollisions(Object.values(this.players), this.bullets);
+    const destroyedBullets = Collisions.applyProjectileCollisions(Object.values(this.players), this.bullets);
     destroyedBullets.forEach(b => {
       if (this.players[b.parentID]) {
         this.players[b.parentID].onDealtDamage();
       }
     });
     this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet));
+    Collisions.applyPlayerCollisions(this.players);
 
     // Check if any players are dead
     Object.keys(this.sockets).forEach(playerID => {
