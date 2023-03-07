@@ -13,13 +13,21 @@ class Game {
     setInterval(this.update.bind(this), 1000 / 60);
   }
 
-  addPlayer(socket, username) {
+  addPlayer(socket, username, classType) {
     this.sockets[socket.id] = socket;
-
     // Generate a position to start this player at.
     const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
     const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
-    this.players[socket.id] = new Player(socket.id, username, x, y);
+    if(classType == Constants.CLASS_TYPES.MAGE)
+      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
+    else if(classType == Constants.CLASS_TYPES.WARRIOR)
+      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
+    else if(classType == Constants.CLASS_TYPES.BRUTE)
+      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
+    else if(classType == Constants.CLASS_TYPES.ROGUE)
+      this.players[socket.id] = new Player.Rogue(socket.id, username, x, y);
+    else 
+      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
   }
 
   removePlayer(socket) {
@@ -89,7 +97,7 @@ class Game {
       }
     });
     this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet));
-    Collisions.applyPlayerCollisions(this.players);
+    Collisions.applyPlayerCollisions(Object.values(this.players));
 
     // Check if any players are dead
     Object.keys(this.sockets).forEach(playerID => {

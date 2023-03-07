@@ -16,6 +16,7 @@ import './css/main.css';
 const playMenu = document.getElementById('play-menu');
 const playButton = document.getElementById('play-button');
 const usernameInput = document.getElementById('username-input');
+const classSelect = document.getElementById('class-select');
 
 Promise.all([
   connect(onGameOver),
@@ -25,7 +26,7 @@ Promise.all([
   usernameInput.focus();
   playButton.onclick = () => {
     // Play!
-    play(usernameInput.value);
+    play(usernameInput.value, classSelect.value);
     playMenu.classList.add('hidden');
     initState();
     startCapturingInput();

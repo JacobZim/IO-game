@@ -75,8 +75,13 @@ function renderPlayer(me, player) {
   context.save();
   context.translate(canvasX, canvasY);
   context.rotate(direction);
+  var asset;
+  if(player.classType == Constants.CLASS_TYPES.ROGUE) {
+    asset = getAsset('experimentRogue1.svg');
+  }
+  else asset = getAsset('circleManExperiment.svg');
   context.drawImage(
-    getAsset('circleManExperiment.svg'),
+    asset,
     -PLAYER_RADIUS,
     -PLAYER_RADIUS,
     PLAYER_RADIUS * 2,

@@ -21,19 +21,15 @@ function onKeyDown(e) {
   let pressed = [];
   switch (e.key) {
     case 'w':
-      console.log("w was pressed");
       pressed.push('w');
       break;
     case 'a':
-      console.log("a was pressed");
       pressed.push('a');
       break;
     case 's':
-      console.log("s was pressed");
       pressed.push('s');
       break;
     case 'd':
-      console.log("d was pressed");
       pressed.push('d');
       break;
     default:
@@ -45,19 +41,15 @@ function onKeyUp(e) {
   let released = [];
   switch (e.key) {
     case 'w':
-      console.log("w was released");
       released.push('w');
       break;
     case 'a':
-      console.log("a was released");
       released.push('a');
       break;
     case 's':
-      console.log("s was released");
       released.push('s');
       break;
     case 'd':
-      console.log("d was released");
       released.push('d');
       break;
     default:

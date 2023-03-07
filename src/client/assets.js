@@ -4,7 +4,9 @@ const ASSET_NAMES = [
   'myShip.png',
   'myBullet.png',
   'mySmileyBullet.png',
-  'circleManExperiment.svg'
+  'circleManExperiment.svg',
+  'rogue.svg',
+  'experimentRogue1.svg',
 ];
 
 const assets = {};

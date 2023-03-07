@@ -9,7 +9,7 @@ module.exports = Object.freeze({
   BULLET_DAMAGE: 10,
   DAMAGE_TYPES: {
     BULLET: 10,
-    COLLISION_PLAYER: 5,
+    COLLISION_PLAYER: 1,
   },
 
   SCORE_BULLET_HIT: 20,
@@ -24,4 +24,11 @@ module.exports = Object.freeze({
     KEYBOARD_INPUT: 'keyboard-input',
     GAME_OVER: 'dead',
   },
+  CLASS_TYPES: {
+    PLAYER: 0,
+    MAGE: 1,
+    WARRIOR: 5,
+    BRUTE: 9,
+    ROGUE: 13,
+  }
 });

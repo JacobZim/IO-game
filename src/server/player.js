@@ -6,14 +6,21 @@ class Player extends ObjectClass {
   constructor(id, username, x, y) {
     super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_SPEED);
     this.username = username;
+    this.classType = Constants.CLASS_TYPES.PLAYER;
     this.hp = Constants.PLAYER_MAX_HP;
-    this.fireCooldown = 0;
+    this.primaryFireCooldown = 0;
+    this.eCooldown = 0;
+    this.qCooldown = 0;
+
     this.score = 0;
+    this.mass = 1.0;
+    this.primary_firing = false;
+    this.eFiring = false;
+    this.qFiring = false;
     this.moveR = false;
     this.moveL = false;
     this.moveU = false;
     this.moveD = false;
-    this.primary_firing = false;
   }
 
   // Returns a newly created bullet, or null.
@@ -28,9 +35,9 @@ class Player extends ObjectClass {
     this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
 
     // Fire a bullet, if needed
-    this.fireCooldown -= dt;
-    if (this.fireCooldown <= 0 && this.primary_firing) {
-      this.fireCooldown = Constants.PLAYER_FIRE_COOLDOWN;
+    this.primaryFireCooldown -= dt;
+    if (this.primaryFireCooldown <= 0 && this.primary_firing) {
+      this.primaryFireCooldown = Constants.PLAYER_FIRE_COOLDOWN;
       return new Bullet(this.id, this.x, this.y, this.direction);
     }
 
@@ -39,35 +46,35 @@ class Player extends ObjectClass {
 
   move(dt) {
     const diag = Math.sqrt(2) / 2;
-    let newX = this.x;
-    let newY = this.y;
-
+    this.dx = 0;
+    this.dy = 0;
+    
     // Calculate new X and Y positions based on keys pressed
     if (this.moveR && this.moveU) {
-      newX += dt * this.speed * diag;
-      newY -= dt * this.speed * diag;
+      this.dx = diag * this.speed;
+      this.dy = diag * this.speed;
     }
     else if (this.moveR && this.moveD) {
-      newX += dt * this.speed * diag;
-      newY += dt * this.speed * diag;
+      this.dx = diag * this.speed;
+      this.dy = diag * this.speed * (-1);
     }
     else if (this.moveL && this.moveU) {
-      newX -= dt * this.speed * diag;
-      newY -= dt * this.speed * diag;
+      this.dx = diag * this.speed * (-1);
+      this.dy = diag * this.speed;
     }
     else if (this.moveL && this.moveD) {
-      newX -= dt * this.speed * diag;
-      newY += dt * this.speed * diag;
+      this.dx = diag * this.speed * (-1);
+      this.dy = diag * this.speed * (-1);
     }
-    else if (this.moveR) newX += dt * this.speed;
-    else if (this.moveL) newX -= dt * this.speed;
-    else if (this.moveU) newY -= dt * this.speed;
-    else if (this.moveD) newY += dt * this.speed;
+    else if (this.moveR) this.dx = this.speed;
+    else if (this.moveL) this.dx = this.speed * (-1);
+    else if (this.moveU) this.dy = this.speed;
+    else if (this.moveD) this.dy = this.speed * (-1);
 
     // Check if the new X and Y positions collide with anything
 
-    this.x = newX;
-    this.y = newY;
+    this.x += this.dx * dt;
+    this.y -= this.dy * dt;
   }
 
   takeDamage(damage) {
@@ -83,8 +90,17 @@ class Player extends ObjectClass {
       ...(super.serializeForUpdate()),
       direction: this.direction,
       hp: this.hp,
+      classType: this.classType,
     };
   }
 }
 
-module.exports = Player;
+class Rogue extends Player {
+  constructor(id, username, x, y) {
+    super(id, username, x, y);
+    this.classType = Constants.CLASS_TYPES.ROGUE;
+  }
+}
+
+module.exports.Player = Player;
+module.exports.Rogue = Rogue;
