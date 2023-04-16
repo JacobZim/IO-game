@@ -7,6 +7,7 @@ const ASSET_NAMES = [
   'circleManExperiment.svg',
   'rogue.svg',
   'experimentRogue1.svg',
+  'rectangle.svg',
 ];
 
 const assets = {};

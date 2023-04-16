@@ -7,6 +7,7 @@ const Constants = require('../shared/constants');
 const Game = require('./game');
 const webpackConfig = require('../../webpack.dev.js');
 
+
 // Setup an Express server
 const app = express();
 app.use(express.static('public'));

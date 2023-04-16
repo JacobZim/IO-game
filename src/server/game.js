@@ -1,6 +1,7 @@
 const Constants = require('../shared/constants');
 const Player = require('./player');
 const Collisions = require('./collisions');
+const ObjectClass  = require('./object')
 
 class Game {
   constructor() {
@@ -8,6 +9,10 @@ class Game {
     this.players = {};
     this.bullets = [];
     this.structures = [];
+    this.addStructure(100, 100, 100, 100, 0);
+    //this.addStructure(200, 200, 50, 50, Math.PI / 2);
+    //this.addStructure(200, 250, 50, 60, Math.PI / 3);
+    //this.addStructure(200, 300, 50, 70, Math.PI / 4);
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     setInterval(this.update.bind(this), 1000 / 60);
@@ -28,6 +33,11 @@ class Game {
       this.players[socket.id] = new Player.Rogue(socket.id, username, x, y);
     else 
       this.players[socket.id] = new Player.Player(socket.id, username, x, y);
+  }
+
+  addStructure(x, y, width, height, dir) {
+    let id = this.structures.length;
+    this.structures.push(new ObjectClass.Rectangle(id, x, y, width, height, dir, 0));
   }
 
   removePlayer(socket) {
@@ -89,6 +99,11 @@ class Game {
       }
     });
 
+    // Update each rectangle
+    this.structures.forEach(struct => {
+      struct.update(dt);
+    })
+
     // Apply collisions, give players score for hitting bullets
     const destroyedBullets = Collisions.applyProjectileCollisions(Object.values(this.players), this.bullets);
     destroyedBullets.forEach(b => {
@@ -137,12 +152,16 @@ class Game {
     const nearbyBullets = this.bullets.filter(
       b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
     );
+    const nearbyStructures = this.structures.filter(
+      b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
+    );
 
     return {
       t: Date.now(),
       me: player.serializeForUpdate(),
       others: nearbyPlayers.map(p => p.serializeForUpdate()),
       bullets: nearbyBullets.map(b => b.serializeForUpdate()),
+      structures: nearbyStructures.map(b => b.serializeForUpdate()),
       leaderboard,
     };
   }

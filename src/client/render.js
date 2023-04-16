@@ -26,7 +26,7 @@ window.addEventListener('resize', debounce(40, setCanvasDimensions));
 let animationFrameRequestId;
 
 function render() {
-  const { me, others, bullets } = getCurrentState();
+  const { me, others, bullets, structures } = getCurrentState();
   if (me) {
     // Draw background
     renderBackground(me.x, me.y);
@@ -35,6 +35,10 @@ function render() {
     context.strokeStyle = 'black';
     context.lineWidth = 1;
     context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE);
+
+    // Draw all structures 
+    console.log("structures: ", structures);
+    structures.forEach(renderStructure.bind(null, me));
 
     // Draw all bullets
     bullets.forEach(renderBullet.bind(null, me));
@@ -115,6 +119,36 @@ function renderBullet(me, bullet) {
     BULLET_RADIUS * 2,
     BULLET_RADIUS * 2,
   );
+}
+
+function renderStructure(me, structure) {
+  const { x, y, direction, width, height, tl} = structure;
+  const canvasX = canvas.width / 2 + x - me.x;
+  const canvasY = canvas.height / 2 + y - me.y;
+  //console.log("renderStructure x, y, tl, width, height: ", x, " ",y," ",tl," ",width," ",height," ",direction);
+  console.log("tl[0], tl[1]: ", tl[0]," ",tl[1]);
+  // Draw structure
+  context.save();
+  context.translate(canvasX, canvasY);
+  context.rotate(direction);
+  var asset;
+  asset = getAsset('rectangle.svg');
+  context.drawImage(
+    asset,
+    -width / 2,//bl[0],
+    -height / 2,//bl[1],
+    width,//tr[0],
+    height//tr[1],
+  );
+  //test tl calculation
+  context.fillStyle = 'white';
+  context.fillRect(
+    tl[0],//-width/2,
+    tl[1],//-height/2,
+    4,
+    4,
+  );
+  context.restore();
 }
 
 function renderMainMenu() {
