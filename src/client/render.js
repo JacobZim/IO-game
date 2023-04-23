@@ -6,7 +6,7 @@ import { getCurrentState } from './state';
 
 const Constants = require('../shared/constants');
 
-const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants;
+//const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants;
 
 // Get the canvas graphics context
 const canvas = document.getElementById('game-canvas');
@@ -26,7 +26,7 @@ window.addEventListener('resize', debounce(40, setCanvasDimensions));
 let animationFrameRequestId;
 
 function render() {
-  const { me, others, bullets, structures } = getCurrentState();
+  const { me, others, projectiles, structures } = getCurrentState();
   if (me) {
     // Draw background
     renderBackground(me.x, me.y);
@@ -34,14 +34,14 @@ function render() {
     // Draw boundaries
     context.strokeStyle = 'black';
     context.lineWidth = 1;
-    context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE);
+    context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, Constants.MAP_SIZE, Constants.MAP_SIZE);
 
     // Draw all structures 
-    console.log("structures: ", structures);
-    structures.forEach(renderStructure.bind(null, me));
+    //console.log("structures : ", structures);
+    //structures.forEach(renderStructure.bind(null, me));
 
-    // Draw all bullets
-    bullets.forEach(renderBullet.bind(null, me));
+    // Draw all projectiles
+    projectiles.forEach(renderProjectile.bind(null, me));
 
     // Draw all players
     renderPlayer(me, me);
@@ -53,15 +53,15 @@ function render() {
 }
 
 function renderBackground(x, y) {
-  const backgroundX = MAP_SIZE / 2 - x + canvas.width / 2;
-  const backgroundY = MAP_SIZE / 2 - y + canvas.height / 2;
+  const backgroundX = Constants.MAP_SIZE / 2 - x + canvas.width / 2;
+  const backgroundY = Constants.MAP_SIZE / 2 - y + canvas.height / 2;
   const backgroundGradient = context.createRadialGradient(
     backgroundX,
     backgroundY,
-    MAP_SIZE / 10,
+    Constants.MAP_SIZE / 10,
     backgroundX,
     backgroundY,
-    MAP_SIZE / 2,
+    Constants.MAP_SIZE / 2,
   );
   backgroundGradient.addColorStop(0, 'black');
   backgroundGradient.addColorStop(1, 'gray');
@@ -74,7 +74,7 @@ function renderPlayer(me, player) {
   const { x, y, direction } = player;
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
-
+  
   // Draw ship
   context.save();
   context.translate(canvasX, canvasY);
@@ -86,38 +86,38 @@ function renderPlayer(me, player) {
   else asset = getAsset('circleManExperiment.svg');
   context.drawImage(
     asset,
-    -PLAYER_RADIUS,
-    -PLAYER_RADIUS,
-    PLAYER_RADIUS * 2,
-    PLAYER_RADIUS * 2,
+    -Constants.RADIUS_TYPES.PLAYER,
+    -Constants.RADIUS_TYPES.PLAYER,
+    Constants.RADIUS_TYPES.PLAYER * 2,
+    Constants.RADIUS_TYPES.PLAYER * 2,
   );
   context.restore();
 
   // Draw health bar
   context.fillStyle = 'white';
   context.fillRect(
-    canvasX - PLAYER_RADIUS,
-    canvasY + PLAYER_RADIUS + 8,
-    PLAYER_RADIUS * 2,
+    canvasX - Constants.RADIUS_TYPES.PLAYER,
+    canvasY + Constants.RADIUS_TYPES.PLAYER + 8,
+    Constants.RADIUS_TYPES.PLAYER * 2,
     2,
   );
   context.fillStyle = 'red';
   context.fillRect(
-    canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * player.hp / PLAYER_MAX_HP,
-    canvasY + PLAYER_RADIUS + 8,
-    PLAYER_RADIUS * 2 * (1 - player.hp / PLAYER_MAX_HP),
+    canvasX - Constants.RADIUS_TYPES.PLAYER + Constants.RADIUS_TYPES.PLAYER * 2 * player.hp / Constants.MAX_HEALTH_TYPES.PLAYER,
+    canvasY + Constants.RADIUS_TYPES.PLAYER + 8,
+    Constants.RADIUS_TYPES.PLAYER * 2 * (1 - player.hp / Constants.MAX_HEALTH_TYPES.PLAYER),
     2,
   );
 }
 
-function renderBullet(me, bullet) {
-  const { x, y } = bullet;
+function renderProjectile(me, projectile) {
+  const { x, y } = projectile;
   context.drawImage(
     getAsset('mySmileyBullet.png'),
-    canvas.width / 2 + x - me.x - BULLET_RADIUS,
-    canvas.height / 2 + y - me.y - BULLET_RADIUS,
-    BULLET_RADIUS * 2,
-    BULLET_RADIUS * 2,
+    canvas.width / 2 + x - me.x - Constants.RADIUS_TYPES.BULLET,
+    canvas.height / 2 + y - me.y - Constants.RADIUS_TYPES.BULLET,
+    Constants.RADIUS_TYPES.BULLET * 2,
+    Constants.RADIUS_TYPES.BULLET * 2,
   );
 }
 
@@ -140,11 +140,14 @@ function renderStructure(me, structure) {
     width,//tr[0],
     height//tr[1],
   );
+  context.restore();
   //test tl calculation
+  context.save();
+  context.translate(canvasX - x, canvasY + y);
   context.fillStyle = 'white';
   context.fillRect(
     tl[0],//-width/2,
-    tl[1],//-height/2,
+    -tl[1],//-height/2,
     4,
     4,
   );
@@ -153,8 +156,8 @@ function renderStructure(me, structure) {
 
 function renderMainMenu() {
   const t = Date.now() / 7500;
-  const x = MAP_SIZE / 2 + 800 * Math.cos(t);
-  const y = MAP_SIZE / 2 + 800 * Math.sin(t);
+  const x = Constants.MAP_SIZE / 2 + 800 * Math.cos(t);
+  const y = Constants.MAP_SIZE / 2 + 800 * Math.sin(t);
   renderBackground(x, y);
 
   // Rerun this render function on the next frame

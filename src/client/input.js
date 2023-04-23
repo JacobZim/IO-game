@@ -14,7 +14,7 @@ function onTouchInput(e) {
 
 function handleInput(x, y) {
   const dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y);
-  updateDirection(dir);
+  updateDirection(dir, x, y);
 }
 
 function onKeyDown(e) {
@@ -31,6 +31,15 @@ function onKeyDown(e) {
       break;
     case 'd':
       pressed.push('d');
+      break;
+    case 'e':
+      pressed.push('e');
+      break;
+    case 'q':
+      pressed.push('q');
+      break;
+    case ' ':
+      pressed.push('space');
       break;
     default:
   }
@@ -51,6 +60,15 @@ function onKeyUp(e) {
       break;
     case 'd':
       released.push('d');
+      break;
+    case 'e':
+      released.push('e');
+      break;
+    case 'q':
+      released.push('q');
+      break;
+    case ' ':
+      released.push('space');
       break;
     default:
   }
@@ -80,4 +98,8 @@ export function stopCapturingInput() {
   window.removeEventListener('click', onMouseInput);
   window.removeEventListener('touchstart', onTouchInput);
   window.removeEventListener('touchmove', onTouchInput);
+  window.removeEventListener('keydown', onKeyDown);
+  window.removeEventListener('keyup', onKeyUp);
+  window.removeEventListener('mousedown', onMouseDown);
+  window.removeEventListener('mouseup', onMouseUp);
 }

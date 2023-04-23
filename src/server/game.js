@@ -7,12 +7,9 @@ class Game {
   constructor() {
     this.sockets = {};
     this.players = {};
-    this.bullets = [];
-    this.structures = [];
-    this.addStructure(100, 100, 100, 100, 0);
-    //this.addStructure(200, 200, 50, 50, Math.PI / 2);
-    //this.addStructure(200, 250, 50, 60, Math.PI / 3);
-    //this.addStructure(200, 300, 50, 70, Math.PI / 4);
+    this.projectiles = [];
+    //this.structures = [];
+    //this.addStructure(100, 100, 100, 100, 0);
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     setInterval(this.update.bind(this), 1000 / 60);
@@ -57,15 +54,17 @@ class Game {
       if (keysDown.includes('a')) player.moveL = true;
       if (keysDown.includes('s')) player.moveD = true;
       if (keysDown.includes('d')) player.moveR = true;
-      if (keysDown.includes('q')) pass;
-      if (keysDown.includes('e')) pass;
+      if (keysDown.includes('q')) player.qFiring = true;
+      if (keysDown.includes('e')) player.eFiring = true;
+      if (keysDown.includes('space')) player.spaceFiring = true;
 
       if (keysUp.includes('w')) player.moveU = false;
       if (keysUp.includes('a')) player.moveL = false;
       if (keysUp.includes('s')) player.moveD = false;
       if (keysUp.includes('d')) player.moveR = false;
-      if (keysUp.includes('q')) pass;
-      if (keysUp.includes('e')) pass;
+      if (keysUp.includes('q')) player.qFiring = false;
+      if (keysUp.includes('e')) player.eFiring = false;
+      if (keysUp.includes('space')) player.spaceFiring = false;
     }
   }
   handleInputMouseClick(socket, pressed) {
@@ -80,38 +79,40 @@ class Game {
     const dt = (now - this.lastUpdateTime) / 1000;
     this.lastUpdateTime = now;
 
-    // Update each bullet
-    const bulletsToRemove = [];
-    this.bullets.forEach(bullet => {
-      if (bullet.update(dt)) {
-        // Destroy this bullet
-        bulletsToRemove.push(bullet);
+    // Update each projectile
+    const projectilesToRemove = [];
+    this.projectiles.forEach(projectile => {
+      if (projectile.update(dt)) {
+        // Destroy this projectile
+        projectilesToRemove.push(projectile);
       }
     });
-    this.bullets = this.bullets.filter(bullet => !bulletsToRemove.includes(bullet));
+    this.projectiles = this.projectiles.filter(projectile => !projectilesToRemove.includes(projectile));
 
     // Update each player
     Object.keys(this.sockets).forEach(playerID => {
       const player = this.players[playerID];
-      const newBullet = player.update(dt);
-      if (newBullet) {
-        this.bullets.push(newBullet);
+      const newProjectiles = player.update(dt);
+      if (newProjectiles) {
+        newProjectiles.forEach(proj => {
+          if (proj) this.projectiles.push(proj);
+        })
       }
     });
 
     // Update each rectangle
-    this.structures.forEach(struct => {
+    /*this.structures.forEach(struct => {
       struct.update(dt);
-    })
+    })*/
 
-    // Apply collisions, give players score for hitting bullets
-    const destroyedBullets = Collisions.applyProjectileCollisions(Object.values(this.players), this.bullets);
-    destroyedBullets.forEach(b => {
+    // Apply collisions, give players score for hitting projectiles
+    const destroyedProjectiles = Collisions.applyProjectileCollisions(Object.values(this.players), this.projectiles);
+    destroyedProjectiles.forEach(b => {
       if (this.players[b.parentID]) {
         this.players[b.parentID].onDealtDamage();
       }
     });
-    this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet));
+    this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles.includes(projectile));
     Collisions.applyPlayerCollisions(Object.values(this.players));
 
     // Check if any players are dead
@@ -149,19 +150,19 @@ class Game {
     const nearbyPlayers = Object.values(this.players).filter(
       p => p !== player && p.distanceTo(player) <= Constants.MAP_SIZE / 2,
     );
-    const nearbyBullets = this.bullets.filter(
+    const nearbyProjectiles = this.projectiles.filter(
       b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
     );
-    const nearbyStructures = this.structures.filter(
+    /*const nearbyStructures = this.structures.filter(
       b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
-    );
+    )*/;
 
     return {
       t: Date.now(),
       me: player.serializeForUpdate(),
       others: nearbyPlayers.map(p => p.serializeForUpdate()),
-      bullets: nearbyBullets.map(b => b.serializeForUpdate()),
-      structures: nearbyStructures.map(b => b.serializeForUpdate()),
+      projectiles: nearbyProjectiles.map(b => b.serializeForUpdate()),
+      //structures: nearbyStructures.map(b => b.serializeForUpdate()),
       leaderboard,
     };
   }

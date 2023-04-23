@@ -47,7 +47,7 @@ function getBaseUpdate() {
   return -1;
 }
 
-// Returns { me, others, bullets }
+// Returns { me, others, projectiles }
 export function getCurrentState() {
   if (!firstServerTimestamp) {
     return {};
@@ -67,7 +67,7 @@ export function getCurrentState() {
     return {
       me: interpolateObject(baseUpdate.me, next.me, ratio),
       others: interpolateObjectArray(baseUpdate.others, next.others, ratio),
-      bullets: interpolateObjectArray(baseUpdate.bullets, next.bullets, ratio),
+      projectiles: interpolateObjectArray(baseUpdate.projectiles, next.projectiles, ratio),
       structures: interpolateObjectArray(baseUpdate.structures, next.structures, ratio),
     };
   }
@@ -82,6 +82,11 @@ function interpolateObject(object1, object2, ratio) {
   Object.keys(object1).forEach(key => {
     if (key === 'direction') {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio);
+    } else if (typeof(object1[key]) == "object") {
+      interpolated[key] = [];
+      for ( let i = 0; i < object1[key].length; i++ ) {
+        interpolated[key][i] = object1[key][i] + (object2[key][i] - object2[key][i]) * ratio;
+      }
     } else {
       interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio;
     }
@@ -90,6 +95,7 @@ function interpolateObject(object1, object2, ratio) {
 }
 
 function interpolateObjectArray(objects1, objects2, ratio) {
+  if (!objects1) return null;
   return objects1.map(o => interpolateObject(o, objects2.find(o2 => o.id === o2.id), ratio));
 }
 

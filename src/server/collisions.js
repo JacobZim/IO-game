@@ -1,26 +1,26 @@
 const Constants = require('../shared/constants');
 const Solids = require("./solids.js");
 
-// Returns an array of bullets to be destroyed.
-function applyProjectileCollisions(players, bullets) {
-  const destroyedBullets = [];
-  for (let i = 0; i < bullets.length; i++) {
-    // Look for a player (who didn't create the bullet) to collide each bullet with.
-    // As soon as we find one, break out of the loop to prevent double counting a bullet.
+// Returns an array of projectiles to be destroyed.
+function applyProjectileCollisions(players, projectiles) {
+  const destroyedProjectiles = [];
+  for (let i = 0; i < projectiles.length; i++) {
+    // Look for a player (who didn't create the projectile) to collide each projectile with.
+    // As soon as we find one, break out of the loop to prevent double counting a projectile.
     for (let j = 0; j < players.length; j++) {
-      const bullet = bullets[i];
+      const projectile = projectiles[i];
       const player = players[j];
       if (
-        bullet.parentID !== player.id &&
-        player.distanceTo(bullet) <= Constants.PLAYER_RADIUS + Constants.BULLET_RADIUS
+        projectile.parentID !== player.id &&
+        player.distanceTo(projectile) <= Constants.RADIUS_TYPES.PLAYER + Constants.RADIUS_TYPES.BULLET
       ) {
-        destroyedBullets.push(bullet);
+        destroyedProjectiles.push(projectile);
         player.takeDamage(Constants.DAMAGE_TYPES.BULLET);
         break;
       }
     }
   }
-  return destroyedBullets;
+  return destroyedProjectiles;
 }
 function applyPlayerCollisions(players, dt) {
   // after each player has move()d, check if any are overlapping and apply collision between the two
@@ -28,7 +28,7 @@ function applyPlayerCollisions(players, dt) {
     for (let i = j + 1; i < players.length; i++) {
       const player = players[j];
       const other = players[i];
-      if (player.distanceTo(other) <= Constants.PLAYER_RADIUS + Constants.PLAYER_RADIUS) {
+      if (player.distanceTo(other) <= Constants.RADIUS_TYPES.PLAYER + Constants.RADIUS_TYPES.PLAYER) {
         collidePlayers(player, other, dt);
       }
     }

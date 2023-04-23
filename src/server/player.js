@@ -1,29 +1,37 @@
 const Object = require('./object');
-const Bullet = require('./bullet');
+const Projectile = require('./projectile');
 const Constants = require('../shared/constants');
 
 class Player extends Object.Object {
   constructor(id, username, x, y) {
-    super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_SPEED);
+    super(id, x, y, Math.random() * 2 * Math.PI, Constants.SPEED_TYPES.PLAYER);
     this.username = username;
     this.classType = Constants.CLASS_TYPES.PLAYER;
-    this.hp = Constants.PLAYER_MAX_HP;
+    this.score = 0;
+    this.mass = 1.0;
+
+    this.hp = Constants.MAX_HEALTH_TYPES.PLAYER;
+
+    this.mouseX = 0;
+    this.mouseY = 0;
+
     this.primaryFireCooldown = 0;
     this.eCooldown = 0;
     this.qCooldown = 0;
+    this.spaceCooldown = 0;
 
-    this.score = 0;
-    this.mass = 1.0;
     this.primary_firing = false;
     this.eFiring = false;
     this.qFiring = false;
+    this.spaceFiring = false;
+
     this.moveR = false;
     this.moveL = false;
     this.moveU = false;
     this.moveD = false;
   }
 
-  // Returns a newly created bullet, or null.
+  // Returns a newly created projectile, or null.
   update(dt) {
     this.move(dt);
 
@@ -34,14 +42,41 @@ class Player extends Object.Object {
     this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
     this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
 
-    // Fire a bullet, if needed
+    // Fire a projectile(s), if needed
+    let projectiles = [];
     this.primaryFireCooldown -= dt;
+    this.eCooldown -= dt;
+    this.qCooldown -= dt;
+    this.spaceCooldown -= dt;
     if (this.primaryFireCooldown <= 0 && this.primary_firing) {
-      this.primaryFireCooldown = Constants.PLAYER_FIRE_COOLDOWN;
-      return new Bullet(this.id, this.x, this.y, this.direction);
+      this.primaryFireCooldown = Constants.COOLDOWN_TYPES.BULLET;
+      this.primaryFire(projectiles);
     }
-
-    return null;
+    if (this.eCooldown <= 0 && this.eFiring) {
+      this.eCooldown = Constants.COOLDOWN_TYPES.BULLET;
+      this.eFire(projectiles);
+    }
+    if (this.qCooldown <= 0 && this.qFiring) {
+      this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
+      this.qFire(projectiles);
+    }
+    if (this.spaceCooldown <= 0 && this.spaceFiring) {
+      this.spaceCooldown = Constants.COOLDOWN_TYPES.BULLET;
+      this.spaceFire(projectiles);
+    }
+    return projectiles;
+  }
+  primaryFire(projectiles) {
+    projectiles.push(new Projectile(this.id, this.x, this.y, this.direction));
+  }
+  eFire(projectiles) {
+    projectiles.push(new Projectile(this.id, this.x, this.y, this.direction));
+  }
+  qFire(projectiles) {
+    projectiles.push(new Projectile(this.id, this.x, this.y, this.direction));
+  }
+  spaceFire(projectiles) {
+    projectiles.push(new Projectile(this.id, this.x, this.y, this.direction));
   }
 
   move(dt) {

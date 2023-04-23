@@ -1,4 +1,4 @@
-const Bullet = require('./bullet');
+const Bullet = require('./projectile');
 const Constants = require('../shared/constants');
 
 const DIRECTION_UP = 0;

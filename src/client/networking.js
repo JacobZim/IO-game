@@ -34,8 +34,8 @@ export const play = (username, classType) => {
   socket.emit(Constants.MSG_TYPES.JOIN_GAME, username, classType);
 };
 
-export const updateDirection = throttle(20, (dir) => {
-  socket.emit(Constants.MSG_TYPES.MOUSE_INPUT, dir);
+export const updateDirection = throttle(20, (dir, mx, my) => {
+  socket.emit(Constants.MSG_TYPES.MOUSE_INPUT, dir, mx, my);
 });
 
 export const updateKeys = throttle(20, (pressed, released) => {

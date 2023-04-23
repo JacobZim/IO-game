@@ -7,6 +7,7 @@ class Object {
     this.dy = 0;
     this.direction = dir; //radians (-pi, pi)
     this.speed = speed;
+    this.team = -1;
   }
   update(dt) {
     this.x += dt * this.speed * Math.sin(this.direction);
@@ -65,6 +66,7 @@ class Rectangle extends Object {
     let y = (Math.sin(angle) * this.radius);// + this.y;
     return [x, y];
   }
+  //https://gamedev.stackexchange.com/questions/86755/how-to-calculate-corner-positions-marks-of-a-rotated-tilted-rectangle#:~:text=(1)%20If%20c%20is%20the,via%20the%20trig%20formulas%20cited.
   getTR() {
     let dir = this.direction;
     let tempX = this.width / 2;
@@ -112,7 +114,7 @@ class Rectangle extends Object {
     //this.dir = this.radiansCorrectRange(this.dir + .01);
   }
   serializeForUpdate() {
-    console.log("this.getTL(), dir", this.getTL(), " ", this.direction);
+    console.log("this.getTL(), type", this.getTL(), " ", typeof(this.getTL()[0]));
     return {
       ...(super.serializeForUpdate()),
       direction: this.direction,
