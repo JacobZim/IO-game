@@ -8,6 +8,7 @@ class Game {
     this.sockets = {};
     this.players = {};
     this.projectiles = [];
+    this.teams = [0,0]; // number of players on team 0, 1
     //this.structures = [];
     //this.addStructure(100, 100, 100, 100, 0);
     this.lastUpdateTime = Date.now();
@@ -17,19 +18,25 @@ class Game {
 
   addPlayer(socket, username, classType) {
     this.sockets[socket.id] = socket;
+    let team = -1;
+    if (this.teams[0] <= this.teams[1]) {team = 0; this.teams[0]++}
+    else {team = 1; this.teams[1]++}
     // Generate a position to start this player at.
-    const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
+    let a;
+    if (team == 0) a = 0.05;
+    else if (team = 1) a = 0.75;
+    const x = Constants.MAP_SIZE * (a + Math.random() * 0.2);
     const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
     if(classType == Constants.CLASS_TYPES.MAGE)
-      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
-    else if(classType == Constants.CLASS_TYPES.WARRIOR)
-      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
-    else if(classType == Constants.CLASS_TYPES.BRUTE)
-      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
+      this.players[socket.id] = new Player.Mage(socket.id, username, x, y, team);
     else if(classType == Constants.CLASS_TYPES.ROGUE)
-      this.players[socket.id] = new Player.Rogue(socket.id, username, x, y);
+      this.players[socket.id] = new Player.Rogue(socket.id, username, x, y, team);
+    else if(classType == Constants.CLASS_TYPES.WARRIOR)
+      this.players[socket.id] = new Player.Warrior(socket.id, username, x, y, team);
+    else if(classType == Constants.CLASS_TYPES.BRUTE)
+      this.players[socket.id] = new Player.Brute(socket.id, username, x, y, team);
     else 
-      this.players[socket.id] = new Player.Player(socket.id, username, x, y);
+      this.players[socket.id] = new Player.Player(socket.id, username, x, y, team);
   }
 
   addStructure(x, y, width, height, dir) {
@@ -38,13 +45,16 @@ class Game {
   }
 
   removePlayer(socket) {
+    if (this.players[socket.id])
+      this.teams[this.players[socket.id].team] -= 1;
     delete this.sockets[socket.id];
     delete this.players[socket.id];
   }
 
-  handleInputMouse(socket, dir) {
+  handleInputMouse(socket, dir, mousex, mousey) {
     if (this.players[socket.id]) {
       this.players[socket.id].setDirection(dir);
+      this.players[socket.id].updateMouse(mousex, mousey);
     }
   }
   handleInputKeys(socket, keysDown, keysUp) {
@@ -99,21 +109,19 @@ class Game {
         })
       }
     });
-
     // Update each rectangle
     /*this.structures.forEach(struct => {
       struct.update(dt);
     })*/
-
     // Apply collisions, give players score for hitting projectiles
-    const destroyedProjectiles = Collisions.applyProjectileCollisions(Object.values(this.players), this.projectiles);
+    const destroyedProjectiles = Collisions.applyProjectileCollisions(Object.values(this.players), this.projectiles, dt);
     destroyedProjectiles.forEach(b => {
       if (this.players[b.parentID]) {
         this.players[b.parentID].onDealtDamage();
       }
     });
     this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles.includes(projectile));
-    Collisions.applyPlayerCollisions(Object.values(this.players));
+    Collisions.applyPlayerCollisions(Object.values(this.players), dt);
 
     // Check if any players are dead
     Object.keys(this.sockets).forEach(playerID => {

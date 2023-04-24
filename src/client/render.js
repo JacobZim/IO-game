@@ -71,7 +71,7 @@ function renderBackground(x, y) {
 
 // Renders a ship at the given coordinates
 function renderPlayer(me, player) {
-  const { x, y, direction } = player;
+  const { x, y, team, radius, direction, classType, hp, maxhp } = player;
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
   
@@ -79,46 +79,120 @@ function renderPlayer(me, player) {
   context.save();
   context.translate(canvasX, canvasY);
   context.rotate(direction);
+  // Choose class asset
   var asset;
-  if(player.classType == Constants.CLASS_TYPES.ROGUE) {
-    asset = getAsset('experimentRogue1.svg');
+  if (team == 0) {
+    if(player.classType == Constants.CLASS_TYPES.MAGE) {
+      asset = getAsset('mageBlue.svg');
+    } else if (classType == Constants.CLASS_TYPES.ROGUE) {
+      asset = getAsset('rogueBlue.svg');
+    } else if (classType == Constants.CLASS_TYPES.WARRIOR) {
+      asset = getAsset('warriorBlue.svg');
+    } else if (classType == Constants.CLASS_TYPES.BRUTE) {
+      asset = getAsset('bruteBlue.svg');
+    } else asset = getAsset('playerBlue.svg');
+  } else if (team == 1) {
+    if(player.classType == Constants.CLASS_TYPES.MAGE) {
+      asset = getAsset('mageRed.svg');
+    } else if (classType == Constants.CLASS_TYPES.ROGUE) {
+      asset = getAsset('rogueRed.svg');
+    } else if (classType == Constants.CLASS_TYPES.WARRIOR) {
+      asset = getAsset('warriorRed.svg');
+    } else if (classType == Constants.CLASS_TYPES.BRUTE) {
+      asset = getAsset('bruteRed.svg');
+    } else asset = getAsset('playerRed.svg');
   }
-  else asset = getAsset('circleManExperiment.svg');
+  // Establish team color
+  //if (team == 0) context.fillStyle = Constants.TEAM_COLOR[0];
+  //else if (team == 1) context.fillStyle = Constants.TEAM_COLOR[1];
+  // Draw team color base
+  //context.beginPath();
+  //context.arc(0, 0, radius, 0, 2 * Math.PI);
+  //context.fill();
+  // Draw class asset
   context.drawImage(
     asset,
-    -Constants.RADIUS_TYPES.PLAYER,
-    -Constants.RADIUS_TYPES.PLAYER,
-    Constants.RADIUS_TYPES.PLAYER * 2,
-    Constants.RADIUS_TYPES.PLAYER * 2,
+    -radius,
+    -radius,
+    radius * 2,
+    radius * 2,
   );
   context.restore();
 
   // Draw health bar
   context.fillStyle = 'white';
   context.fillRect(
-    canvasX - Constants.RADIUS_TYPES.PLAYER,
-    canvasY + Constants.RADIUS_TYPES.PLAYER + 8,
-    Constants.RADIUS_TYPES.PLAYER * 2,
+    canvasX - radius,
+    canvasY + radius + 8,
+    radius * 2,
     2,
   );
   context.fillStyle = 'red';
   context.fillRect(
-    canvasX - Constants.RADIUS_TYPES.PLAYER + Constants.RADIUS_TYPES.PLAYER * 2 * player.hp / Constants.MAX_HEALTH_TYPES.PLAYER,
-    canvasY + Constants.RADIUS_TYPES.PLAYER + 8,
-    Constants.RADIUS_TYPES.PLAYER * 2 * (1 - player.hp / Constants.MAX_HEALTH_TYPES.PLAYER),
+    canvasX - radius + radius * 2 * hp / maxhp,
+    canvasY + radius + 8,
+    radius * 2 * (1 - hp / maxhp),
     2,
   );
 }
 
 function renderProjectile(me, projectile) {
-  const { x, y } = projectile;
+  const { id, x, y, team, radius, direction, classType } = projectile;
+  
+  const canvasX = canvas.width / 2 + x - me.x;
+  const canvasY = canvas.height / 2 + y - me.y;
+  
+  // Rotate projectile
+  context.save();
+  context.translate(canvasX, canvasY);
+  context.rotate(direction);
+
+  // Choose class asset
+  var asset;
+  if (team == 0) {
+    if (classType == Constants.CLASS_TYPES.ENERGY_BALL ||
+      classType == Constants.CLASS_TYPES.KNIFE_THROW || 
+      classType == Constants.CLASS_TYPES.SWORD_SWIPE ||
+      classType == Constants.CLASS_TYPES.FIST_SMASH) {
+        asset = getAsset('blueProjectile.svg');
+    } else if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
+      asset = getAsset('blueMagicWall.svg');
+    } else if(classType == Constants.CLASS_TYPES.HEALING_RING) {
+      asset = getAsset('blueHealingRing.svg')
+    } else asset = getAsset('bullet.svg');
+  } else if (team == 1) {
+    if (classType == Constants.CLASS_TYPES.ENERGY_BALL ||
+      classType == Constants.CLASS_TYPES.KNIFE_THROW || 
+      classType == Constants.CLASS_TYPES.SWORD_SWIPE ||
+      classType == Constants.CLASS_TYPES.FIST_SMASH) {
+        asset = getAsset('redProjectile.svg');
+    } else if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
+      asset = getAsset('redMagicWall.svg');
+    } else if(classType == Constants.CLASS_TYPES.HEALING_RING) {
+      asset = getAsset('redHealingRing.svg')
+    } else asset = getAsset('bullet.svg');
+  } else {
+    asset = getAsset('bullet.svg');
+  }
+  
+
+  // Establish team color
+  if (team == 0) context.fillStyle = Constants.TEAM_COLOR[0];
+  else if (team == 1) context.fillStyle = Constants.TEAM_COLOR[1];
+
+  // Draw team color base
+  //context.beginPath();
+  //context.arc(0, 0, radius, 0, 2 * Math.PI);
+  //context.fill();
+  // Draw class asset
   context.drawImage(
-    getAsset('mySmileyBullet.png'),
-    canvas.width / 2 + x - me.x - Constants.RADIUS_TYPES.BULLET,
-    canvas.height / 2 + y - me.y - Constants.RADIUS_TYPES.BULLET,
-    Constants.RADIUS_TYPES.BULLET * 2,
-    Constants.RADIUS_TYPES.BULLET * 2,
+    asset,
+    -radius,//canvas.width / 2 + x - me.x - Constants.RADIUS_TYPES.BULLET,
+    -radius,//canvas.height / 2 + y - me.y - Constants.RADIUS_TYPES.BULLET,
+    radius * 2,//Constants.RADIUS_TYPES.BULLET * 2,
+    radius * 2,//Constants.RADIUS_TYPES.BULLET * 2,
   );
+  context.restore();
 }
 
 function renderStructure(me, structure) {

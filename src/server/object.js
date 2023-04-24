@@ -1,13 +1,16 @@
 class Object {
-  constructor(id, x, y, dir, speed) {
+  constructor(id, x, y, dir, team) {
     this.id = id;
+    this.radius = 0;
     this.x = x;
     this.y = y;
-    this.dx = 0;
-    this.dy = 0;
+    //this.dx = 0;
+    //this.dy = 0;
     this.direction = dir; //radians (-pi, pi)
-    this.speed = speed;
-    this.team = -1;
+    this.speed = 0;
+    this.team = team;
+    this.damage = 0;
+    this.classType = -1;
   }
   update(dt) {
     this.x += dt * this.speed * Math.sin(this.direction);
@@ -18,6 +21,11 @@ class Object {
     const dy = this.y - object.y;
     return Math.sqrt(dx * dx + dy * dy);
   }
+  distanceTo2(x, y) {
+    const dx = this.x - x;
+    const dy = this.y - y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
   setDirection(dir) {
     this.direction = dir;
   }
@@ -26,21 +34,25 @@ class Object {
       id: this.id,
       x: this.x,
       y: this.y,
+      team: this.team,
+      radius: this.radius,
+      direction: this.direction,
+      classType: this.classType,
     };
   }
-  setDxDy() {
+  /*setDxDy() {
     //let rad = this.direction * 3.1415 / 180;
     this.dx = cos(this.direction) * this.speed;
     this.dy = sin(this.direction) * this.speed;
-  }
+  }*/
   getNextX() {
     return this.x + this.getDX();
   }
   getNextY() {
     return this.y + this.getDY();
   }
-  getDY() { return this.dy; }
-  getDX() { return this.dx; }
+  //getDY() { return this.dy; }
+  //getDX() { return this.dx; }
 }
 
 class Rectangle extends Object {

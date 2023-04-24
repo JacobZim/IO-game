@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   version="1.1"
+   viewBox="0 0 100 100"
+   id="svg20849"
+   sodipodi:docname="rogueBlue.svg"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs20853" />
+  <sodipodi:namedview
+     id="namedview20851"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0824912"
+     inkscape:cx="175.05916"
+     inkscape:cy="191.68747"
+     inkscape:window-width="1214"
+     inkscape:window-height="709"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g20847" />
+  <circle
+     cx="50"
+     cy="50"
+     r="50"
+     fill="#00f"
+     stroke-width="0"
+     id="circle20839" />
+  <g
+     fill="#fff"
+     id="g20847"
+     style="fill:none;stroke:#ffffff;stroke-opacity:1">
+    <ellipse
+       transform="matrix(.97894 -.20413 .21419 .97679 0 0)"
+       cx="30.977"
+       cy="21.83"
+       rx="10.163"
+       ry="4.656"
+       stroke-width="0"
+       id="ellipse20841"
+       style="fill:#ffffff;stroke:#ffffff;stroke-opacity:1" />
+    <ellipse
+       transform="matrix(-.97894 -.20413 -.21419 .97679 0 0)"
+       cx="-66.708"
+       cy="1.4158"
+       rx="10.163"
+       ry="4.656"
+       stroke-width="0"
+       id="ellipse20843"
+       style="fill:#ffffff;stroke:#ffffff;stroke-opacity:1" />
+    <path
+       d="M 77.264998,88.385282 23.139131,87.907766 50.473497,16.816696 63.869247,52.600691 Z"
+       id="path20845"
+       style="fill:none;stroke:#ffffff;stroke-width:4.58826;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

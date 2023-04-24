@@ -47,8 +47,8 @@ function joinGame(username, classType) {
   game.addPlayer(this, username, classType);
 }
 
-function handleInputMouse(dir) {
-  game.handleInputMouse(this, dir);
+function handleInputMouse(dir, mousex, mousey) {
+  game.handleInputMouse(this, dir, mousex, mousey);
 }
 
 function handleInputKeyboard(keydown, keyup) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="100mm" height="100mm" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+ <g stroke-width="0">
+  <circle cx="50" cy="50" r="50" fill="#f00"/>
+  <ellipse transform="matrix(.97894 -.20413 .21419 .97679 0 0)" cx="30.977" cy="21.83" rx="10.163" ry="4.656"/>
+  <ellipse transform="matrix(-.97894 -.20413 -.21419 .97679 0 0)" cx="-66.708" cy="1.4158" rx="10.163" ry="4.656"/>
+ </g>
+ <rect transform="rotate(-31.888)" x="7.1853" y="43.744" width="18.462" height=".99792" stroke="#000" stroke-width="4.0802"/>
+ <rect transform="matrix(-.84909 -.52825 -.52825 .84909 0 0)" x="-77.998" y="-8.9215" width="18.462" height=".99792" stroke="#000" stroke-width="4.0802"/>
+</svg>

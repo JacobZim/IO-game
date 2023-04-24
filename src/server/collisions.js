@@ -1,8 +1,9 @@
+const { parseSync } = require('@babel/core');
 const Constants = require('../shared/constants');
 const Solids = require("./solids.js");
 
 // Returns an array of projectiles to be destroyed.
-function applyProjectileCollisions(players, projectiles) {
+function applyProjectileCollisions(players, projectiles, dt) {
   const destroyedProjectiles = [];
   for (let i = 0; i < projectiles.length; i++) {
     // Look for a player (who didn't create the projectile) to collide each projectile with.
@@ -10,25 +11,43 @@ function applyProjectileCollisions(players, projectiles) {
     for (let j = 0; j < players.length; j++) {
       const projectile = projectiles[i];
       const player = players[j];
-      if (
+      if (player.distanceTo(projectile) <= player.radius + projectile.radius) {
+        if (projectile.AoE == Constants.AoE_TYPES.HEAL) {
+          console.log("AoE affect heal");
+          if (player.team == projectile.team)
+            player.takeDamage(projectile.damage * dt);
+        } else if (projectile.AoE == Constants.AoE_TYPES.DAMAGE) {
+          console.log("AoE affect damage");
+          if (player.team != projectile.team)
+            player.takeDamage(projectile.damage * dt);
+        } else if (player.team != projectile.team) {
+          destroyedProjectiles.push(projectile);
+          player.takeDamage(projectile.damage);
+          break;
+        }
+      /*if (
         projectile.parentID !== player.id &&
-        player.distanceTo(projectile) <= Constants.RADIUS_TYPES.PLAYER + Constants.RADIUS_TYPES.BULLET
+        player.distanceTo(projectile) <= player.radius + projectile.radius && 
+        player.team != projectile.team
       ) {
         destroyedProjectiles.push(projectile);
-        player.takeDamage(Constants.DAMAGE_TYPES.BULLET);
+        player.takeDamage(projectile.damage);
         break;
+      }*/
       }
     }
   }
   return destroyedProjectiles;
 }
+
+
 function applyPlayerCollisions(players, dt) {
   // after each player has move()d, check if any are overlapping and apply collision between the two
   for (let j = 0; j < players.length; j++) {
     for (let i = j + 1; i < players.length; i++) {
       const player = players[j];
       const other = players[i];
-      if (player.distanceTo(other) <= Constants.RADIUS_TYPES.PLAYER + Constants.RADIUS_TYPES.PLAYER) {
+      if (player.distanceTo(other) <= player.radius + other.radius) {
         collidePlayers(player, other, dt);
       }
     }
@@ -50,8 +69,11 @@ function collidePlayers(player1, player2, dt) {
   player1.x += dx / player1.mass;
   player2.y -= dy / player2.mass;
   player2.x -= dx / player2.mass;
+  
+  player2.takeDamage(player1.damage * dt) ;
+  player1.takeDamage(player2.damage * dt) ;
 }
 
 function detectCollisionRectangle(rect1, rect2) {
-  
+  return;
 }

@@ -1,6 +1,8 @@
 // Learn more about this file at:
 // https://victorzhou.com/blog/build-an-io-game-part-1/#6-client-input-%EF%B8%8F
 import { updateDirection, updateKeys, updateMouse } from './networking';
+// Get the canvas graphics context
+const canvas = document.getElementById('game-canvas');
 
 function onMouseInput(e) {
   handleInput(e.clientX, e.clientY);
@@ -12,14 +14,17 @@ function onTouchInput(e) {
   handleInput(touch.clientX, touch.clientY);
 }
 
-function handleInput(x, y) {
-  const dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y);
+// FORMULA const canvasX = canvas.width / 2 + x - me.x;
+function handleInput(canvasx, canvasy) {
+  const dir = Math.atan2(canvasx - window.innerWidth / 2, window.innerHeight / 2 - canvasy);
+  let x = canvasx - (canvas.width / 2);
+  let y = canvasy - (canvas.height / 2);
   updateDirection(dir, x, y);
 }
 
-function onKeyDown(e) {
+function onKeyDown(x) {
   let pressed = [];
-  switch (e.key) {
+  switch (x.key) {
     case 'w':
       pressed.push('w');
       break;
@@ -46,9 +51,9 @@ function onKeyDown(e) {
   updateKeys(pressed, []);
 }
 
-function onKeyUp(e) {
+function onKeyUp(x) {
   let released = [];
-  switch (e.key) {
+  switch (x.key) {
     case 'w':
       released.push('w');
       break;
