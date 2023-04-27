@@ -1,7 +1,8 @@
 const Object = require('./object');
 const Projectiles = require('./projectile');
 const Constants = require('../shared/constants');
-const { COOLDOWN_TYPES } = require('../shared/constants');
+const Structures = require('./structure');
+//const { COOLDOWN_TYPES } = require('../shared/constants');
 
 class Player extends Object.Object {
   constructor(id, username, x, y, team) {
@@ -49,31 +50,32 @@ class Player extends Object.Object {
 
     // Fire a projectile(s), if needed
     let projectiles = [];
+    let structures = [];
     this.primaryFireCooldown -= dt;
     this.eCooldown -= dt;
     this.qCooldown -= dt;
     this.spaceCooldown -= dt;
     this.regenCooldown -= dt;
     if (this.primaryFireCooldown <= 0 && this.primary_firing) {
-      this.primaryFire(projectiles);
+      this.primaryFire(projectiles, structures);
     }
     if (this.eCooldown <= 0 && this.eFiring) {
-      this.eFire(projectiles);
+      this.eFire(projectiles, structures);
     }
     if (this.qCooldown <= 0 && this.qFiring) {
-      this.qFire(projectiles);
+      this.qFire(projectiles, structures);
     }
     if (this.spaceCooldown <= 0 && this.spaceFiring) {
-      this.spaceFire(projectiles);
+      this.spaceFire(projectiles, structures);
     }
     this.regen(dt);
-    return projectiles;
+    return [projectiles, structures];
   }
-  primaryFire(projectiles) {
+  primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.BULLET;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  eFire(projectiles) {
+  eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.BULLET;
     let inc = Math.PI / 12;
     projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
@@ -82,11 +84,11 @@ class Player extends Object.Object {
     projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction-inc    , this.team, this.mouseX, this.mouseY));
     projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction-inc-inc, this.team, this.mouseX, this.mouseY));
   }
-  qFire(projectiles) {
+  qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  spaceFire(projectiles) {
+  spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.BULLET;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
@@ -163,32 +165,29 @@ class Mage extends Player {
     this.damage = Constants.DAMAGE_TYPES.MAGE;
     this.mass = Constants.MASS_TYPES.MAGE;
   }
-  primaryFire(projectiles) {
+  primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.ENERGY_BALL;
     projectiles.push(new Projectiles.EnergyBall(this.id, this.x, this.y, this.direction, this.team));
   }
-  eFire(projectiles) {
+  eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.MAGIC_WALL;
     let inc = Math.PI / 12;
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction+inc    , this.team, this.mouseX, this.mouseY));
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction+inc+inc, this.team, this.mouseX, this.mouseY));
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction-inc    , this.team, this.mouseX, this.mouseY));
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction-inc-inc, this.team, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc    , this.team, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc+inc, this.team, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc    , this.team, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc-inc, this.team, this.mouseX, this.mouseY));
   }
-  qFire(projectiles) {
+  qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  spaceFire(projectiles) {
-    console.log("Healing ring created");
+  spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.HEALING_RING;
     let oppTeam;
     if (this.team == 0) oppTeam = 1;
     else oppTeam = 0;
-    console.log("mage: ", this);
     let x = new Projectiles.HealingRing(this.id, this.x, this.y, this.direction, this.team, this.mouseX, this.mouseY);
-    console.log("new healing ring: ", x)
     projectiles.push(x);
   }
   regen(dt) {
@@ -212,21 +211,21 @@ class Rogue extends Player {
     this.radius = Constants.RADIUS_TYPES.ROGUE;
     this.damage = Constants.DAMAGE_TYPES.ROGUE;
     this.mass = Constants.MASS_TYPES.ROGUE;
+    this.invisible = Constants.INVISIBILITY.NONE;
   }
-  primaryFire(projectiles) {
+  primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.KNIFE_THROW;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction, this.team, this.invisible));
   }
-  eFire(projectiles) {
-    this.eCooldown = Constants.COOLDOWN_TYPES.KNIFE_FAN;
-    let inc = Math.PI / 12;
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
+  eFire(projectiles, structures) {
+    this.eCooldown = Constants.COOLDOWN_TYPES.INVISIBILITY;
+    this.invisible = Constants.INVISIBILITY.FULL;
   }
-  qFire(projectiles) {
+  qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  spaceFire(projectiles) {
+  spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.DASH;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
@@ -239,6 +238,12 @@ class Rogue extends Player {
       this.hp += Constants.REGEN_TYPES.ROGUE * dt;
     }
   }
+  serializeForUpdate() {
+    return {
+      ...(super.serializeForUpdate()),
+      invisible: this.invisible,
+    };
+  }
 }
 class Warrior extends Player {
   constructor(id, username, x, y, team) {
@@ -250,23 +255,39 @@ class Warrior extends Player {
     this.radius = Constants.RADIUS_TYPES.WARRIOR;
     this.damage = Constants.DAMAGE_TYPES.WARRIOR;
     this.mass = Constants.MASS_TYPES.WARRIOR;
+    this.shields = [new Structures.Shield(this.id, this.x, this.y, this.direction, this.team),
+      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team),
+      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team)];
+    this.shieldshealth = [Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD];
+    this.shieldsactive = false;
   }
-  primaryFire(projectiles) {
+  primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.SWORD_SWIPE;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  eFire(projectiles) {
+  eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.SHIELD_BASH;
     let inc = Math.PI / 12;
     projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
   }
-  qFire(projectiles) {
+  qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  spaceFire(projectiles) {
+  spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.SHIELD;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    this.shieldsactive = !this.shieldsactive;
+    if (this.shieldsactive) {
+      for (i = 0; i<3; i++ ) {
+        this.shields[i].hp = this.shieldshealth[i];
+        structures.push(this.shields[i])
+      }
+    } else {
+      for (i = 0; i<3; i++ ) {
+        this.shieldshealth[i] = this.shields[i].hp;
+        this.shields[i].hp = 0;
+      }
+    }
   }
   regen(dt) {
     if (this.hp >= Constants.MAX_HEALTH_TYPES.WARRIOR) {
@@ -276,6 +297,21 @@ class Warrior extends Player {
     if (this.regenCooldown <= 0) {
       this.hp += Constants.REGEN_TYPES.WARRIOR * dt;
     }
+  }
+  update(dt) {
+    let totalhp = 0;
+    this.shields.forEach(shield => {
+      totalhp += shield.hp;
+    })
+    if (totalhp <= 0) this.shieldsactive = false;
+    if (this.shieldsactive) {
+      this.shields[0].shieldupdate(this.x, this.y, this.direction)
+    } else {
+      this.shields.forEach(shield => {
+        shield.regen(dt);
+      })
+    }
+    return super.update();
   }
 }
 class Brute extends Player {
@@ -289,20 +325,20 @@ class Brute extends Player {
     this.damage = Constants.DAMAGE_TYPES.BRUTE;
     this.mass = Constants.MASS_TYPES.BRUTE;
   }
-  primaryFire(projectiles) {
+  primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.FIST_SMASH;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  eFire(projectiles) {
+  eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.GROUND_POUND;
     let inc = Math.PI / 12;
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
+    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction        , this.team));
   }
-  qFire(projectiles) {
+  qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
-  spaceFire(projectiles) {
+  spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.RAGE;
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }

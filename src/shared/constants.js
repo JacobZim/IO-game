@@ -25,6 +25,9 @@ const gTypes = Object.freeze({
   GROUND_POUND: Symbol("GROUND_POUND"),
   RAGE: Symbol("RAGE"),
 })*/
+// npm init, same set up with railway
+// needs equivalent of requirements.txt, which npm init should generate
+
 
 module.exports = Object.freeze({
   TEAM_COLOR: {
@@ -43,7 +46,7 @@ module.exports = Object.freeze({
     MAGIC_WALL: 19,
     //Rogue
     KNIFE_THROW: 20,
-    KNIFE_FAN: 21,
+    INVISIBILITY: 21,
     DASH: 22,
     //Warrior
     SWORD_SWIPE: 23,
@@ -54,6 +57,7 @@ module.exports = Object.freeze({
     GROUND_POUND: 27,
     RAGE: 28,
     BULLET: 29,
+    STRUCTURE: 30,
   },
   MAX_HEALTH_TYPES: {
     PLAYER: 100,
@@ -61,6 +65,9 @@ module.exports = Object.freeze({
     ROGUE: 100,
     WARRIOR: 150,
     BRUTE: 200,
+    STRUCTURE: 100,
+    MAGIC_WALL: 100,
+    SHIELD: 200,
   },
   REGEN_TYPES: {
     PLAYER: 10,
@@ -68,6 +75,9 @@ module.exports = Object.freeze({
     ROGUE: 10,
     WARRIOR: 10,
     BRUTE: 10,
+    STRUCTURE: 0,
+    MAGIC_WALL: 0,
+    SHIELD: 5,
   },
   REGEN_TIME: 5,
   COOLDOWN_TYPES: {
@@ -79,12 +89,12 @@ module.exports = Object.freeze({
     MAGIC_WALL: 6.0,
     //Rogue
     KNIFE_THROW: 0.25,
-    KNIFE_FAN: 8.0,
+    INVISIBILITY: 10.0,
     DASH: 3.0,
     //Warrior
     SWORD_SWIPE: 0.5,
     SHIELD_BASH: 8.0,
-    SHIELD: 4.0,
+    SHIELD: 1.0,
     //Brute
     FIST_SMASH: .6,
     GROUND_POUND: 8.0,
@@ -96,24 +106,26 @@ module.exports = Object.freeze({
     BULLET: 10,
     //Mage
     MAGE: 20,
-    ENERGY_BALL: 3,
-    HEALING_RING: 50,
+    ENERGY_BALL: 4,
+    HEALING_RING: 75,
     MAGIC_WALL: 20,
     //Rogue
     ROGUE: 20,
-    KNIFE_THROW: 4,
-    KNIFE_FAN: 4,
+    KNIFE_THROW: 5,
+    INVISIBILITY: 20,
     DASH: 4,
     //Warrior
     WARRIOR: 25,
     SWORD_SWIPE: 5,
     SHIELD_BASH: 10,
-    SHIELD: 22,
+    SHIELD: 20,
     //Brute
     BRUTE: 30,
     FIST_SMASH: 10,
     GROUND_POUND: 50,
     RAGE: 25,
+    //Structures
+    STRUCTURE: 25,
   },
   DAMAGE_TYPES: {
     PLAYER: 1,
@@ -122,22 +134,24 @@ module.exports = Object.freeze({
     MAGE: 0,
     ENERGY_BALL: 7,
     HEALING_RING: -15,
-    MAGIC_WALL: 0,
+    MAGIC_WALL: 10,
     //Rogue
     ROGUE: 5,
     KNIFE_THROW: 10,
-    KNIFE_FAN: 10,
+    INVISIBILITY: 50,
     DASH: 0,
     //Warrior
     WARRIOR: 0,
     SWORD_SWIPE: 22,
     SHIELD_BASH: 30,
-    SHIELD: 150,
+    SHIELD: 10,
     //Brute
     BRUTE: 0,
     FIST_SMASH: 30,
     GROUND_POUND: 24,
     RAGE: 200,
+    //Structures
+    STRUCTURE: 25,
   },
   SPEED_TYPES: {
     PLAYER: 400,
@@ -152,16 +166,18 @@ module.exports = Object.freeze({
     MAGIC_WALL: 400,
     //Rogue
     KNIFE_THROW: 800,
-    KNIFE_FAN: 800,
+    INVISIBILITY: 500,
     DASH: 1200,
     //Warrior
     SWORD_SWIPE: 400,
     SHIELD_BASH: 800,
-    SHIELD: 400,
+    SHIELD: 0,
     //Brute
     FIST_SMASH: 400,
     GROUND_POUND: 400,
     RAGE: 500,
+    //Structures
+    STRUCTURE: 400,
   },
   PROJ_LIFESPAN: {
     PLAYER: null,
@@ -169,19 +185,21 @@ module.exports = Object.freeze({
     //Mage
     ENERGY_BALL: 1.0,
     HEALING_RING: 5.0,
-    MAGIC_WALL: 3.0,
+    MAGIC_WALL: 5.0,
     //Rogue
     KNIFE_THROW: 0.8,
-    KNIFE_FAN: 0.8,
+    INVISIBILITY: 0.8,
     DASH: 0.3,
     //Warrior
     SWORD_SWIPE: 0.5,
     SHIELD_BASH: 4.0,
-    SHIELD: 10.0,
+    SHIELD: 100.0,
     //Brute
     FIST_SMASH: 0.4,
     GROUND_POUND: 8.0,
     RAGE: 8.0,
+    //Structures 
+    STRUCTURE: 8.0,
   },
   MASS_TYPES: {
     PLAYER: 1.0,
@@ -189,10 +207,18 @@ module.exports = Object.freeze({
     ROGUE: 1.0,
     WARRIOR: 1.5,
     BRUTE: 2.0,
+    STRUCTURE: 4.0,
+    MAGIC_WALL: 5.0,
+    SHIELD: 2.0,
   },
   AoE_TYPES: {
     HEAL: 'heal',
     DAMAGE: 'damage',
+  },
+  INVISIBILITY: {
+    FULL: 1.0,
+    HALF: 0.5,
+    NONE: 0.0,
   },
 
   SCORE_BULLET_HIT: 20,

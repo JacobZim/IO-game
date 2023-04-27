@@ -9,8 +9,8 @@ class Game {
     this.players = {};
     this.projectiles = [];
     this.teams = [0,0]; // number of players on team 0, 1
-    //this.structures = [];
-    //this.addStructure(100, 100, 100, 100, 0);
+    this.structures = [];
+    //this.addRectangle(100, 100, 100, 100, 0);
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     setInterval(this.update.bind(this), 1000 / 60);
@@ -39,7 +39,7 @@ class Game {
       this.players[socket.id] = new Player.Player(socket.id, username, x, y, team);
   }
 
-  addStructure(x, y, width, height, dir) {
+  addRectangle(x, y, width, height, dir) {
     let id = this.structures.length;
     this.structures.push(new ObjectClass.Rectangle(id, x, y, width, height, dir, 0));
   }
@@ -98,21 +98,34 @@ class Game {
       }
     });
     this.projectiles = this.projectiles.filter(projectile => !projectilesToRemove.includes(projectile));
-
+    // Update each structure
+    
+    const structuresToRemove = [];
+    this.structures.forEach(structure => {
+      if (structure.update(dt)) {
+        // Destroy this structure
+        structuresToRemove.push(structure);
+      }
+    });
+    this.structures = this.structures.filter(structure => !structuresToRemove.includes(structure));
+    
     // Update each player
     Object.keys(this.sockets).forEach(playerID => {
       const player = this.players[playerID];
-      const newProjectiles = player.update(dt);
+      const [newProjectiles, newStructures] = player.update(dt);
+      //console.log("newProjectiles, newStructures", newProjectiles, newStructures);
       if (newProjectiles) {
         newProjectiles.forEach(proj => {
           if (proj) this.projectiles.push(proj);
         })
       }
+      if (newStructures) {
+        newStructures.forEach(struct => {
+          if (struct) this.structures.push(struct);
+        })
+      }
     });
-    // Update each rectangle
-    /*this.structures.forEach(struct => {
-      struct.update(dt);
-    })*/
+    
     // Apply collisions, give players score for hitting projectiles
     const destroyedProjectiles = Collisions.applyProjectileCollisions(Object.values(this.players), this.projectiles, dt);
     destroyedProjectiles.forEach(b => {
@@ -122,6 +135,18 @@ class Game {
     });
     this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles.includes(projectile));
     Collisions.applyPlayerCollisions(Object.values(this.players), dt);
+    Collisions.applyPlayerStructureCollisions(Object.values(this.players), this.structures, dt);
+    const destroyedProjectiles2 = Collisions.applyStructureCollisions(this.structures, this.projectiles, dt);
+    this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles2.includes(projectile));
+    // Check if structures are dead
+    
+    this.structures.forEach(structure => {
+      if (structure.hp <= 0) {
+        // Destroy this structure
+        structuresToRemove.push(structure);
+      }
+    });
+    this.structures = this.structures.filter(structure => !structuresToRemove.includes(structure));
 
     // Check if any players are dead
     Object.keys(this.sockets).forEach(playerID => {
@@ -161,16 +186,16 @@ class Game {
     const nearbyProjectiles = this.projectiles.filter(
       b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
     );
-    /*const nearbyStructures = this.structures.filter(
+    const nearbyStructures = this.structures.filter(
       b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
-    )*/;
+    );
 
     return {
       t: Date.now(),
       me: player.serializeForUpdate(),
       others: nearbyPlayers.map(p => p.serializeForUpdate()),
       projectiles: nearbyProjectiles.map(b => b.serializeForUpdate()),
-      //structures: nearbyStructures.map(b => b.serializeForUpdate()),
+      structures: nearbyStructures.map(b => b.serializeForUpdate()),
       leaderboard,
     };
   }

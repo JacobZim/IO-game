@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>An example .io game</title>
+  <title>Fantasy.io</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="shortcut icon" href="/assets/icon64.png">
+  <link rel="shortcut icon" href="/assets/mageHalfNHalf.svg">
   <meta property="description" content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
-  <meta property="og:title" content="An example .io game">
+  <meta property="og:title" content="fantasy.io">
   <meta property="og:description" content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
   <meta property="og:image" content="/assets/icon1200.png">
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-58664433-3"></script>
@@ -20,31 +20,66 @@
 <body>
   <canvas id="game-canvas"></canvas>
   <div id="play-menu" class="hidden">
-    <h1>An example .io game</h1>
+    <div id="title">
+      <img src="/assets/mageBlue.svg" class="small-image">
+      <h1>Fantasy.io</h1>
+      <img src="/assets/mageRed.svg" class="small-image">
+    </div>
     <p>
-      Stay alive and shoot other players.
+      Choose a Class, Work Together and Fight Other Players.
       <br />
-      Use your mouse to move.
+      WASD to Move, Left-click to Primary Fire, 
+      <br />
+      E for Offensive Ability, Space for Defensive Ability
     </p>
     <hr />
-    <p>
-      <!-- <br /> -->
-      Read the tutorial: <a href="https://victorzhou.com/blog/build-an-io-game-part-1/" target="_blank">How to Build an .io Game</a>.
-      <br />
-      See the source code on <a href="https://github.com/vzhou842/example-.io-game" target="_blank">Github</a>.
-      <br />
-      Created by <a href="https://victorzhou.com">Victor Zhou</a>.
-    </p>
-    <hr />
-    <select id="class-select">
+    <p>Select your class</p>
+    <div style="display:flex; flex-direction:row; justify-content: space-around;">
+      <div style="margin: 0 5px 0 5px;">
+        <input type="radio" name="class-select" value="1" id="select-mage">
+        <label for="select-mage">Mage</label>
+      </div>
+      <div style="margin: 0 5px 0 5px;">
+        <input type="radio" name="class-select" value="5" id="select-rogue">
+        <label for="select-rogue">Rogue</label>
+      </div>
+      <div style="margin: 0 5px 0 5px;">
+        <input type="radio" name="class-select" value="9" id="select-warrior">
+        <label for="select-warrior">Warrior</label>
+      </div>
+      <div style="margin: 0 5px 0 5px;">
+        <input type="radio" name="class-select" value="13" id="select-brute">
+        <label for="select-brute">Brute</label>
+      </div>
+    </div>
+    <!--<select id="class-select">
       <option value=0>Player</option>
       <option value=1>Mage</option>
       <option value=5>Rogue</option>
       <option value=9>Warrior</option>
       <option value=13>Brute</option>
-    </select>
+    </select>-->
     <input type="text" id="username-input" placeholder="Username" />
     <button id="play-button">PLAY</button>
+    <hr />
+    <p>
+      <!-- <br /> -->
+      Welcome Business 1010!
+      <br />
+      Created by Jacob Zimmerman.
+      <br />
+      SlimZimmStudios
+    </p>
+    <hr />
+    <p>
+      Learn to make your own .io game like I have.
+      <br />
+      Read the tutorial: <a href="https://victorzhou.com/blog/build-an-io-game-part-1/" target="_blank">How to Build an .io Game</a>.
+      <br />
+      See the source code on <a href="https://github.com/vzhou842/example-.io-game" target="_blank">Github</a>.
+      <br />
+      Starter project by <a href="https://victorzhou.com">Victor Zhou</a>.
+    </p>
   </div>
   <div id="leaderboard" class="hidden">
     <table>

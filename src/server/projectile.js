@@ -12,10 +12,7 @@ class Projectile extends Object.Object {
     this.damage = Constants.DAMAGE_TYPES.BULLET;
     this.classType = Constants.CLASS_TYPES.BULLET;
     this.speed = Constants.SPEED_TYPES.BULLET;
-    delete this.dx;
-    delete this.dy;
   }
-
   // Returns true if the projectile should be destroyed
   update(dt) {
     super.update(dt);
@@ -41,27 +38,6 @@ class EnergyBall extends Projectile {
   }
 }
 
-class MagicWall extends Projectile {
-  constructor(parentID, x, y, dir, team, finX, finY) {
-    super(parentID, x, y, dir, team);
-    this.speed = Constants.SPEED_TYPES.MAGIC_WALL;
-    this.startX = x;
-    this.startY = y;
-    this.distance = this.distanceTo2(finX, finY);
-    this.lifespan = Constants.PROJ_LIFESPAN.MAGIC_WALL;
-    this.hp = Constants.MAX_HEALTH_TYPES.MAGE;
-    this.radius = Constants.RADIUS_TYPES.MAGIC_WALL;
-    this.damage = Constants.DAMAGE_TYPES.MAGIC_WALL;
-    this.classType = Constants.CLASS_TYPES.MAGIC_WALL;
-  }
-  // Returns true if the projectile should be destroyed
-  update(dt) {
-    if (super.update(dt)) return true;
-    if (this.distanceTo2(this.startX, this.startY) >= this.distance) this.speed = 0;
-    return false;
-  }
-}
-
 class HealingRing extends Projectile {
   constructor(parentID, x, y, dir, team, finX, finY) {
     super(parentID, finX, finY, dir, team);
@@ -83,7 +59,28 @@ class HealingRing extends Projectile {
   }
 }
 
+class KnifeThrow extends Projectile {
+  constructor(parentID, x, y, dir, team, invis) {
+    super(parentID, x, y, dir, team);
+    this.speed = Constants.SPEED_TYPES.KNIFE_THROW;
+    this.lifespan = Constants.PROJ_LIFESPAN.KNIFE_THROW;
+    this.radius = Constants.RADIUS_TYPES.KNIFE_THROW;
+    if (invis != Constants.INVISIBILITY.NONE)
+      this.damage = Constants.DAMAGE_TYPES.KNIFE_THROW * 5;
+    else this.damage = Constants.DAMAGE_TYPES.KNIFE_THROW;
+    this.classType = Constants.CLASS_TYPES.KNIFE_THROW;
+  }
+  // Returns true if the projectile should be destroyed
+  update(dt) {
+    if (super.update(dt)) return true;
+    return false;
+  }
+}
+
 module.exports.Projectile = Projectile;
+
 module.exports.EnergyBall = EnergyBall;
-module.exports.MagicWall = MagicWall;
+//module.exports.MagicWall = MagicWall;
 module.exports.HealingRing = HealingRing;
+
+module.exports.KnifeThrow = KnifeThrow;

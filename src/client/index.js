@@ -16,7 +16,6 @@ import './css/main.css';
 const playMenu = document.getElementById('play-menu');
 const playButton = document.getElementById('play-button');
 const usernameInput = document.getElementById('username-input');
-const classSelect = document.getElementById('class-select');
 
 Promise.all([
   connect(onGameOver),
@@ -25,8 +24,12 @@ Promise.all([
   playMenu.classList.remove('hidden');
   usernameInput.focus();
   playButton.onclick = () => {
+    const classSelect = document.querySelector('input[name=class-select]:checked');
+    let choice;
+    if (classSelect) {choice = classSelect.value;}
+    else {choice = 1};
     // Play!
-    play(usernameInput.value, classSelect.value);
+    play(usernameInput.value, choice);
     playMenu.classList.add('hidden');
     initState();
     startCapturingInput();

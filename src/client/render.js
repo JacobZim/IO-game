@@ -38,7 +38,7 @@ function render() {
 
     // Draw all structures 
     //console.log("structures : ", structures);
-    //structures.forEach(renderStructure.bind(null, me));
+    structures.forEach(renderStructure.bind(null, me));
 
     // Draw all projectiles
     projectiles.forEach(renderProjectile.bind(null, me));
@@ -82,7 +82,7 @@ function renderPlayer(me, player) {
   // Choose class asset
   var asset;
   if (team == 0) {
-    if(player.classType == Constants.CLASS_TYPES.MAGE) {
+    if(classType == Constants.CLASS_TYPES.MAGE) {
       asset = getAsset('mageBlue.svg');
     } else if (classType == Constants.CLASS_TYPES.ROGUE) {
       asset = getAsset('rogueBlue.svg');
@@ -92,7 +92,7 @@ function renderPlayer(me, player) {
       asset = getAsset('bruteBlue.svg');
     } else asset = getAsset('playerBlue.svg');
   } else if (team == 1) {
-    if(player.classType == Constants.CLASS_TYPES.MAGE) {
+    if(classType == Constants.CLASS_TYPES.MAGE) {
       asset = getAsset('mageRed.svg');
     } else if (classType == Constants.CLASS_TYPES.ROGUE) {
       asset = getAsset('rogueRed.svg');
@@ -109,6 +109,9 @@ function renderPlayer(me, player) {
   //context.beginPath();
   //context.arc(0, 0, radius, 0, 2 * Math.PI);
   //context.fill();
+  if (player.invisible) {
+    context.globalAlpha = 1.0 - player.invisble;
+  }
   // Draw class asset
   context.drawImage(
     asset,
@@ -134,6 +137,7 @@ function renderPlayer(me, player) {
     radius * 2 * (1 - hp / maxhp),
     2,
   );
+  context.globalAlpha = 1.0;
 }
 
 function renderProjectile(me, projectile) {
@@ -196,6 +200,69 @@ function renderProjectile(me, projectile) {
 }
 
 function renderStructure(me, structure) {
+  const { x, y, team, radius, direction, classType, hp, maxhp } = structure;
+  const canvasX = canvas.width / 2 + x - me.x;
+  const canvasY = canvas.height / 2 + y - me.y;
+  
+  // Draw ship
+  context.save();
+  context.translate(canvasX, canvasY);
+  context.rotate(direction);
+  // Choose class asset
+  var asset;
+  if (team == 0) {
+    if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
+      asset = getAsset('blueMagicWall.svg');
+    } else if (classType == Constants.CLASS_TYPES.SHIELD) {
+      asset = getAsset('blueMagicWall.svg');
+    } else if (classType == Constants.CLASS_TYPES.WARRIOR) {
+      asset = getAsset('warriorBlue.svg');
+    } else if (classType == Constants.CLASS_TYPES.BRUTE) {
+      asset = getAsset('bruteBlue.svg');
+    } else asset = getAsset('playerBlue.svg');
+  } else if (team == 1) {
+    if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
+      asset = getAsset('redMagicWall.svg');
+    } else if (classType == Constants.CLASS_TYPES.SHIELD) {
+      asset = getAsset('redMagicWall.svg');
+    } else if (classType == Constants.CLASS_TYPES.WARRIOR) {
+      asset = getAsset('warriorRed.svg');
+    } else if (classType == Constants.CLASS_TYPES.BRUTE) {
+      asset = getAsset('bruteRed.svg');
+    } else asset = getAsset('playerRed.svg');
+  }
+  if (structure.invisible) {
+    context.globalAlpha = 1.0 - player.invisble;
+  }
+  // Draw class asset
+  context.drawImage(
+    asset,
+    -radius,
+    -radius,
+    radius * 2,
+    radius * 2,
+  );
+  context.restore();
+
+  // Draw health bar
+  context.fillStyle = 'white';
+  context.fillRect(
+    canvasX - radius,
+    canvasY + radius + 8,
+    radius * 2,
+    2,
+  );
+  context.fillStyle = 'red';
+  context.fillRect(
+    canvasX - radius + radius * 2 * hp / maxhp,
+    canvasY + radius + 8,
+    radius * 2 * (1 - hp / maxhp),
+    2,
+  );
+  context.globalAlpha = 1.0
+}
+/*
+function renderRectangle(me, structure) {
   const { x, y, direction, width, height, tl} = structure;
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
@@ -226,7 +293,7 @@ function renderStructure(me, structure) {
     4,
   );
   context.restore();
-}
+}*/
 
 function renderMainMenu() {
   const t = Date.now() / 7500;

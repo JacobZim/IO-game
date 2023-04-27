@@ -1,5 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg width="50mm" height="50mm" version="1.1" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
- <circle transform="scale(1,-1)" cx="25" cy="-25" r="25" fill="#00f"/>
+
+<svg
+   width="50mm"
+   height="50mm"
+   version="1.1"
+   viewBox="0 0 50 50"
+   id="svg1417"
+   sodipodi:docname="blueProjectile.svg"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   inkscape:export-filename="blueProjectile.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1421" />
+  <sodipodi:namedview
+     id="namedview1419"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.2488333"
+     inkscape:cx="63.659415"
+     inkscape:cy="98.091552"
+     inkscape:window-width="1298"
+     inkscape:window-height="637"
+     inkscape:window-x="47"
+     inkscape:window-y="55"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1417" />
+  <ellipse
+     transform="scale(1,-1)"
+     cx="24.999998"
+     cy="-25"
+     fill="#0000ff"
+     id="circle1415"
+     style="stroke:#ffffff;stroke-width:4.71014;stroke-dasharray:none;stroke-opacity:1"
+     rx="22.644928"
+     ry="22.64493" />
 </svg>
