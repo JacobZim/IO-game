@@ -35,6 +35,7 @@ class Player extends Object.Object {
     this.moveL = false;
     this.moveU = false;
     this.moveD = false;
+    this.overrideMovement = false;
   }
 
   // Returns a newly created projectile, or null.
@@ -103,6 +104,7 @@ class Player extends Object.Object {
   }
 
   move(dt) {
+    if (this.overrideMovement) return;
     const diag = Math.sqrt(2) / 2;
     this.dx = 0;
     this.dy = 0;
@@ -141,6 +143,12 @@ class Player extends Object.Object {
   takeDamage(damage) {
     this.hp -= damage;
     this.regenCooldown = Constants.REGEN_TIME;
+    if (this.invisible) {
+      this.invisible -= Constants.INVISIBILITY.DAMAGE;
+      if (this.invisible < Constants.INVISIBILITY.NONE) {
+        this.invisible = Constants.INVISIBILITY.NONE;
+      }
+    }
   }
   onDealtDamage() {
     this.score += Constants.SCORE_BULLET_HIT;
@@ -153,6 +161,8 @@ class Player extends Object.Object {
     };
   }
 }
+
+// heaven/hell io? angels vs demons holy.io?
 
 class Mage extends Player {
   constructor(id, username, x, y, team) {
@@ -212,14 +222,28 @@ class Rogue extends Player {
     this.damage = Constants.DAMAGE_TYPES.ROGUE;
     this.mass = Constants.MASS_TYPES.ROGUE;
     this.invisible = Constants.INVISIBILITY.NONE;
+    this.dashTimer = 0;
+    this.dashDirection = 0;
+    this.dashCollisions = [];
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.KNIFE_THROW;
-    projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction, this.team, this.invisible));
+    if (this.invisible) {
+      let inc = Math.PI / 24;
+      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction - inc - inc, this.team, 0));
+      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction - inc, this.team, 0));
+      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction, this.team, 0));
+      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction + inc, this.team, 0));
+      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction + inc + inc, this.team, 0));
+      this.invisible = Constants.INVISIBILITY.NONE;
+    }
+    else {
+      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction, this.team, 0));
+    }
   }
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.INVISIBILITY;
-    this.invisible = Constants.INVISIBILITY.FULL;
+    this.invisible = Constants.INVISIBILITY.INIT;
   }
   qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
@@ -227,7 +251,14 @@ class Rogue extends Player {
   }
   spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.DASH;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    this.dashTimer = Constants.PROJ_LIFESPAN.DASH;
+    this.dashDirection = this.direction;
+    this.overrideMovement = true;
+  }
+  Dash(dt) {
+    this.x += dt * Constants.SPEED_TYPES.DASH * Math.sin(this.dashDirection);
+    this.y -= dt * Constants.SPEED_TYPES.DASH * Math.cos(this.dashDirection);
+    this.direction = this.dashDirection;
   }
   regen(dt) {
     if (this.hp >= Constants.MAX_HEALTH_TYPES.ROGUE) {
@@ -237,6 +268,28 @@ class Rogue extends Player {
     if (this.regenCooldown <= 0) {
       this.hp += Constants.REGEN_TYPES.ROGUE * dt;
     }
+  }
+  update(dt) {
+    if (this.dashTimer > 0) {
+      this.dashTimer -= dt;
+    } else {
+      this.dashTimer = 0;
+    }
+    if (this.invisible) {
+      if (this.invisible < Constants.INVISIBILITY.FULL) {
+        this.invisible += Constants.INVISIBILITY.REGEN * dt;
+        if (this.invisible > Constants.INVISIBILITY.FULL) {
+          this.invisible = Constants.INVISIBILITY.FULL;
+        }
+      }
+    }
+    if (this.dashTimer > 0) {
+      this.Dash(dt);
+    } else {
+      this.dashCollisions = [];
+      this.overrideMovement = false;
+    }
+    return super.update(dt);
   }
   serializeForUpdate() {
     return {
@@ -255,11 +308,13 @@ class Warrior extends Player {
     this.radius = Constants.RADIUS_TYPES.WARRIOR;
     this.damage = Constants.DAMAGE_TYPES.WARRIOR;
     this.mass = Constants.MASS_TYPES.WARRIOR;
-    this.shields = [new Structures.Shield(this.id, this.x, this.y, this.direction, this.team),
-      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team),
-      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team)];
-    this.shieldshealth = [Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD];
-    this.shieldsactive = false;
+    this.bashTimer = 0;
+    this.bashDirection = 0;
+    this.shields = [new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this),
+      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this),
+      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this)];
+    this.shieldsHp = [Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD];
+    this.shieldsActive = false;
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.SWORD_SWIPE;
@@ -267,8 +322,19 @@ class Warrior extends Player {
   }
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.SHIELD_BASH;
-    let inc = Math.PI / 12;
-    projectiles.push(new Projectiles.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
+    this.bashTimer = Constants.PROJ_LIFESPAN.SHIELD_BASH;
+    this.bashDirection = this.direction;
+    this.overrideMovement = true;
+    //this.speed = 4 * Constants.SPEED_TYPES.SHIELD_BASH;
+    for (let i = 0; i<3; i++ ) {
+      this.shields[i].damage = Constants.DAMAGE_TYPES.SHIELD_BASH;
+    }
+  }
+  ShieldBash(dt) {
+    //this.speed = Constants.SPEED_TYPES.WARRIOR;
+    this.x += dt * Constants.SPEED_TYPES.SHIELD_BASH * Math.sin(this.bashDirection);
+    this.y -= dt * Constants.SPEED_TYPES.SHIELD_BASH * Math.cos(this.bashDirection);
+    this.direction = this.bashDirection;
   }
   qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
@@ -276,15 +342,15 @@ class Warrior extends Player {
   }
   spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.SHIELD;
-    this.shieldsactive = !this.shieldsactive;
-    if (this.shieldsactive) {
-      for (i = 0; i<3; i++ ) {
-        this.shields[i].hp = this.shieldshealth[i];
+    this.shieldsActive = !this.shieldsActive;
+    if (this.shieldsActive) {
+      for (let i = 0; i<3; i++ ) {
+        this.shields[i].hp = this.shieldsHp[i];
         structures.push(this.shields[i])
       }
     } else {
-      for (i = 0; i<3; i++ ) {
-        this.shieldshealth[i] = this.shields[i].hp;
+      for (let i = 0; i<3; i++ ) {
+        this.shieldsHp[i] = this.shields[i].hp;
         this.shields[i].hp = 0;
       }
     }
@@ -299,19 +365,37 @@ class Warrior extends Player {
     }
   }
   update(dt) {
-    let totalhp = 0;
-    this.shields.forEach(shield => {
-      totalhp += shield.hp;
-    })
-    if (totalhp <= 0) this.shieldsactive = false;
-    if (this.shieldsactive) {
-      this.shields[0].shieldupdate(this.x, this.y, this.direction)
+    if (this.bashTimer > 0) {
+      this.bashTimer -= dt;
     } else {
-      this.shields.forEach(shield => {
-        shield.regen(dt);
-      })
+      this.bashTimer = 0;
     }
-    return super.update();
+    let totalHp = 0;
+    this.shields.forEach(shield => {
+      totalHp += shield.hp;
+    })
+    if (totalHp <= 0) this.shieldsActive = false;
+    let inc = Math.PI / 4;
+    this.shields[0].shieldupdate(this.x, this.y, this.direction - inc);
+    this.shields[1].shieldupdate(this.x, this.y, this.direction);
+    this.shields[2].shieldupdate(this.x, this.y, this.direction + inc);
+    if (!this.shieldsActive) {
+      for (let i = 0; i < 3; i++) {
+        this.shieldsHp[i] += Constants.REGEN_TYPES.SHIELD * dt;
+        if (this.shieldsHp[i] < 0 ) this.shieldsHp[i] = 0;
+        if (this.shieldsHp[i] > Constants.MAX_HEALTH_TYPES.SHIELD) this.shieldsHp[i] = Constants.MAX_HEALTH_TYPES.SHIELD;
+      }
+    }
+    if (this.bashTimer > 0) {
+      this.ShieldBash(dt);
+    }
+    else {
+      for (let i = 0; i<3; i++ ) {
+        this.shields[i].damage = Constants.DAMAGE_TYPES.SHIELD;
+      }
+      this.overrideMovement = false;
+    }
+    return super.update(dt);
   }
 }
 class Brute extends Player {

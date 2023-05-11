@@ -25,7 +25,9 @@ class Game {
     let a;
     if (team == 0) a = 0.05;
     else if (team = 1) a = 0.75;
-    const x = Constants.MAP_SIZE * (a + Math.random() * 0.2);
+    //const x = Constants.MAP_SIZE * (a + Math.random() * 0.2);
+    //const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
+    const x = Constants.MAP_SIZE * (.4 + Math.random() * 0.2);
     const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
     if(classType == Constants.CLASS_TYPES.MAGE)
       this.players[socket.id] = new Player.Mage(socket.id, username, x, y, team);
@@ -45,8 +47,15 @@ class Game {
   }
 
   removePlayer(socket) {
-    if (this.players[socket.id])
+    if (this.players[socket.id]) {
       this.teams[this.players[socket.id].team] -= 1;
+      if (this.players[socket.id].classType == Constants.CLASS_TYPES.WARRIOR) {
+        for (let i = 0; i < 3; i++ ) {
+          this.players[socket.id].shields[i].hp = 0;
+          delete this.players[socket.id].shields[i];// this line doesn't seem to have any effect
+        }
+      }
+    }
     delete this.sockets[socket.id];
     delete this.players[socket.id];
   }
@@ -60,21 +69,49 @@ class Game {
   handleInputKeys(socket, keysDown, keysUp) {
     let player = this.players[socket.id];
     if (player) {
-      if (keysDown.includes('w')) player.moveU = true;
-      if (keysDown.includes('a')) player.moveL = true;
-      if (keysDown.includes('s')) player.moveD = true;
-      if (keysDown.includes('d')) player.moveR = true;
-      if (keysDown.includes('q')) player.qFiring = true;
-      if (keysDown.includes('e')) player.eFiring = true;
-      if (keysDown.includes('space')) player.spaceFiring = true;
+      if (keysDown.includes('w')) {
+        player.moveU = true;
+      }
+      if (keysDown.includes('a')) {
+        player.moveL = true;
+      }
+      if (keysDown.includes('s')) {
+        player.moveD = true;
+      }
+      if (keysDown.includes('d')) {
+        player.moveR = true;
+      }
+      if (keysDown.includes('q')) {
+        player.qFiring = true;
+      }
+      if (keysDown.includes('e')) {
+        player.eFiring = true;
+      }
+      if (keysDown.includes('space')) {
+        player.spaceFiring = true;
+      }
 
-      if (keysUp.includes('w')) player.moveU = false;
-      if (keysUp.includes('a')) player.moveL = false;
-      if (keysUp.includes('s')) player.moveD = false;
-      if (keysUp.includes('d')) player.moveR = false;
-      if (keysUp.includes('q')) player.qFiring = false;
-      if (keysUp.includes('e')) player.eFiring = false;
-      if (keysUp.includes('space')) player.spaceFiring = false;
+      if (keysUp.includes('w')) {
+        player.moveU = false;
+      }
+      if (keysUp.includes('a')) {
+        player.moveL = false;
+      }
+      if (keysUp.includes('s')) {
+        player.moveD = false;
+      }
+      if (keysUp.includes('d')) {
+        player.moveR = false;
+      }
+      if (keysUp.includes('q')) {
+        player.qFiring = false;
+      }
+      if (keysUp.includes('e')) {
+        player.eFiring = false;
+      }
+      if (keysUp.includes('space')) {
+        player.spaceFiring = false;
+      }
     }
   }
   handleInputMouseClick(socket, pressed) {
@@ -99,7 +136,6 @@ class Game {
     });
     this.projectiles = this.projectiles.filter(projectile => !projectilesToRemove.includes(projectile));
     // Update each structure
-    
     const structuresToRemove = [];
     this.structures.forEach(structure => {
       if (structure.update(dt)) {
@@ -108,7 +144,6 @@ class Game {
       }
     });
     this.structures = this.structures.filter(structure => !structuresToRemove.includes(structure));
-    
     // Update each player
     Object.keys(this.sockets).forEach(playerID => {
       const player = this.players[playerID];
@@ -126,6 +161,7 @@ class Game {
       }
     });
     
+
     // Apply collisions, give players score for hitting projectiles
     const destroyedProjectiles = Collisions.applyProjectileCollisions(Object.values(this.players), this.projectiles, dt);
     destroyedProjectiles.forEach(b => {
@@ -136,7 +172,8 @@ class Game {
     this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles.includes(projectile));
     Collisions.applyPlayerCollisions(Object.values(this.players), dt);
     Collisions.applyPlayerStructureCollisions(Object.values(this.players), this.structures, dt);
-    const destroyedProjectiles2 = Collisions.applyStructureCollisions(this.structures, this.projectiles, dt);
+    Collisions.applyStructureCollisions(this.structures, dt);
+    const destroyedProjectiles2 = Collisions.applyStructureProjectileCollisions(this.structures, this.projectiles, dt);
     this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles2.includes(projectile));
     // Check if structures are dead
     

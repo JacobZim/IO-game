@@ -36,12 +36,13 @@ function render() {
     context.lineWidth = 1;
     context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, Constants.MAP_SIZE, Constants.MAP_SIZE);
 
-    // Draw all structures 
-    //console.log("structures : ", structures);
-    structures.forEach(renderStructure.bind(null, me));
 
     // Draw all projectiles
     projectiles.forEach(renderProjectile.bind(null, me));
+
+    // Draw all structures 
+    //console.log("structures : ", structures);
+    structures.forEach(renderStructure.bind(null, me));
 
     // Draw all players
     renderPlayer(me, me);
@@ -110,7 +111,12 @@ function renderPlayer(me, player) {
   //context.arc(0, 0, radius, 0, 2 * Math.PI);
   //context.fill();
   if (player.invisible) {
-    context.globalAlpha = 1.0 - player.invisble;
+    context.globalAlpha = 1.0 - player.invisible;
+      if (me == player) {
+        if (player.invisible > 0.9) {
+          context.globalAlpha = 0.1;
+        }
+      }
   }
   // Draw class asset
   context.drawImage(
@@ -121,7 +127,12 @@ function renderPlayer(me, player) {
     radius * 2,
   );
   context.restore();
-
+  if (player.invisible) {
+    context.globalAlpha = 1.0 - player.invisible;
+      if (me == player) {
+        context.globalAlpha = 0.5;
+      }
+  }
   // Draw health bar
   context.fillStyle = 'white';
   context.fillRect(
@@ -242,24 +253,24 @@ function renderStructure(me, structure) {
     radius * 2,
     radius * 2,
   );
-  context.restore();
 
   // Draw health bar
   context.fillStyle = 'white';
   context.fillRect(
-    canvasX - radius,
-    canvasY + radius + 8,
-    radius * 2,
+     - radius / 2,
+     + radius ,
+    radius ,
     2,
   );
   context.fillStyle = 'red';
   context.fillRect(
-    canvasX - radius + radius * 2 * hp / maxhp,
-    canvasY + radius + 8,
-    radius * 2 * (1 - hp / maxhp),
+      - radius / 2 + radius * hp / maxhp,
+     + radius ,
+    radius * (1 - hp / maxhp),
     2,
   );
-  context.globalAlpha = 1.0
+  context.restore();
+  context.globalAlpha = 1.0;
 }
 /*
 function renderRectangle(me, structure) {

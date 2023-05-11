@@ -63,7 +63,7 @@ class MagicWall extends Structure {
 }
 
 class Shield extends Structure {
-    constructor(parentID, x, y, dir, team) {
+    constructor(parentID, x, y, dir, team, parent) {
         super(parentID, x, y, dir, team);
         this.startX = x;
         this.startY = y;
@@ -74,17 +74,20 @@ class Shield extends Structure {
         this.classType = Constants.CLASS_TYPES.SHIELD;
         this.mass = Constants.MASS_TYPES.SHIELD;
         this.speed = 0;
+        this.parent = parent;
     }
     // Returns true if the projectile should be destroyed
     update(dt) {
-        this.currenttime += dt;
+        this.currenttime -= dt;
         if (super.update(dt)) return true;
         return false;
     }
     shieldupdate(x, y, direction) {
-        this.x = x + Math.sin(direction) * 30 ;
-        this.y = y + Math.cos(direction) * 30;
-        this.direction = direction;
+        direction -= Math.PI / 2;
+        let shielddist = 50;
+        this.x = x + Math.cos(direction) * shielddist ;
+        this.y = y + Math.sin(direction) * shielddist;
+        this.direction = direction + Math.PI / 2;
     }
     regen(dt) {
         this.hp += Constants.REGEN_TYPES.SHIELD * dt;

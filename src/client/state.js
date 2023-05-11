@@ -82,7 +82,8 @@ function interpolateObject(object1, object2, ratio) {
   Object.keys(object1).forEach(key => {
     if (key === 'direction') {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio);
-    } else if (typeof(object1[key]) == "object") {
+    } else if (typeof(object1[key]) == "object" ) {//&& object1[key] != null
+      console.log("object1[key]: ", object1);
       interpolated[key] = [];
       for ( let i = 0; i < object1[key].length; i++ ) {
         interpolated[key][i] = object1[key][i] + (object2[key][i] - object2[key][i]) * ratio;
