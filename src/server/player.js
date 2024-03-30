@@ -150,6 +150,9 @@ class Player extends Object.Object {
       }
     }
   }
+  takeHealing(healing) {
+    this.hp += healing;
+  }
   onDealtDamage() {
     this.score += Constants.SCORE_BULLET_HIT;
   }
@@ -177,6 +180,7 @@ class Mage extends Player {
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.ENERGY_BALL;
+    console.log("proj created:",this.x, this.y)
     projectiles.push(new Projectiles.EnergyBall(this.id, this.x, this.y, this.direction, this.team));
   }
   eFire(projectiles, structures) {
@@ -276,6 +280,7 @@ class Rogue extends Player {
       this.dashTimer = 0;
     }
     if (this.invisible) {
+      this.eCooldown = Constants.COOLDOWN_TYPES.INVISIBILITY
       if (this.invisible < Constants.INVISIBILITY.FULL) {
         this.invisible += Constants.INVISIBILITY.REGEN * dt;
         if (this.invisible > Constants.INVISIBILITY.FULL) {
@@ -310,15 +315,19 @@ class Warrior extends Player {
     this.mass = Constants.MASS_TYPES.WARRIOR;
     this.bashTimer = 0;
     this.bashDirection = 0;
-    this.shields = [new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this),
-      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this),
-      new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this)];
-    this.shieldsHp = [Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD,Constants.MAX_HEALTH_TYPES.SHIELD];
+    this.bashCollisions = [];
+    this.shields = [];
+    this.shieldsHp = [];
+    for(let i = 0; i < Constants.QUANTITIES.WARRIOR_SHIELDS; i++) {
+      this.shields.push(new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this));
+      this.shieldsHp.push(Constants.MAX_HEALTH_TYPES.SHIELD);
+    }
     this.shieldsActive = false;
+    this.swords = [];
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.SWORD_SWIPE;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    structures.push(new Structures.WarriorSwipe(this.id, this.x, this.y, this.direction, this.team));
   }
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.SHIELD_BASH;
@@ -326,7 +335,7 @@ class Warrior extends Player {
     this.bashDirection = this.direction;
     this.overrideMovement = true;
     //this.speed = 4 * Constants.SPEED_TYPES.SHIELD_BASH;
-    for (let i = 0; i<3; i++ ) {
+    for (let i = 0; i<this.shields.length; i++ ) {
       this.shields[i].damage = Constants.DAMAGE_TYPES.SHIELD_BASH;
     }
   }
@@ -344,12 +353,12 @@ class Warrior extends Player {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.SHIELD;
     this.shieldsActive = !this.shieldsActive;
     if (this.shieldsActive) {
-      for (let i = 0; i<3; i++ ) {
+      for (let i = 0; i < this.shields.length; i++ ) {
         this.shields[i].hp = this.shieldsHp[i];
         structures.push(this.shields[i])
       }
     } else {
-      for (let i = 0; i<3; i++ ) {
+      for (let i = 0; i<this.shields.length; i++ ) {
         this.shieldsHp[i] = this.shields[i].hp;
         this.shields[i].hp = 0;
       }
@@ -376,11 +385,14 @@ class Warrior extends Player {
     })
     if (totalHp <= 0) this.shieldsActive = false;
     let inc = Math.PI / 4;
-    this.shields[0].shieldupdate(this.x, this.y, this.direction - inc);
-    this.shields[1].shieldupdate(this.x, this.y, this.direction);
-    this.shields[2].shieldupdate(this.x, this.y, this.direction + inc);
+    let startArc = -inc * (this.shields.length - 1) / 2;
+    for (let i = 0; i < this.shields.length; i++) {
+      this.shields[i].shieldupdate(this.x, this.y, this.direction + startArc);
+      startArc += inc;
+    }
+    
     if (!this.shieldsActive) {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < this.shields.length; i++) {
         this.shieldsHp[i] += Constants.REGEN_TYPES.SHIELD * dt;
         if (this.shieldsHp[i] < 0 ) this.shieldsHp[i] = 0;
         if (this.shieldsHp[i] > Constants.MAX_HEALTH_TYPES.SHIELD) this.shieldsHp[i] = Constants.MAX_HEALTH_TYPES.SHIELD;
@@ -390,7 +402,7 @@ class Warrior extends Player {
       this.ShieldBash(dt);
     }
     else {
-      for (let i = 0; i<3; i++ ) {
+      for (let i = 0; i<this.shields.length; i++ ) {
         this.shields[i].damage = Constants.DAMAGE_TYPES.SHIELD;
       }
       this.overrideMovement = false;

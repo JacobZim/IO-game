@@ -50,7 +50,7 @@ class Game {
     if (this.players[socket.id]) {
       this.teams[this.players[socket.id].team] -= 1;
       if (this.players[socket.id].classType == Constants.CLASS_TYPES.WARRIOR) {
-        for (let i = 0; i < 3; i++ ) {
+        for (let i = 0; i < Constants.QUANTITIES.WARRIOR_SHIELDS; i++ ) {
           this.players[socket.id].shields[i].hp = 0;
           delete this.players[socket.id].shields[i];// this line doesn't seem to have any effect
         }
@@ -173,7 +173,7 @@ class Game {
     Collisions.applyPlayerCollisions(Object.values(this.players), dt);
     Collisions.applyPlayerStructureCollisions(Object.values(this.players), this.structures, dt);
     Collisions.applyStructureCollisions(this.structures, dt);
-    const destroyedProjectiles2 = Collisions.applyStructureProjectileCollisions(this.structures, this.projectiles, dt);
+    const destroyedProjectiles2 = Collisions.applyProjectileCollisions(this.structures, this.projectiles, dt);
     this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles2.includes(projectile));
     // Check if structures are dead
     

@@ -57,8 +57,13 @@ module.exports = Object.freeze({
     FIST_SMASH: 26,
     GROUND_POUND: 27,
     RAGE: 28,
+    //Etc
     BULLET: 29,
     STRUCTURE: 30,
+    // Extra
+  },
+  QUANTITIES: {
+    WARRIOR_SHIELDS: 3,
   },
   // the max healths for players or structures
   MAX_HEALTH_TYPES: {
@@ -70,6 +75,7 @@ module.exports = Object.freeze({
     STRUCTURE: 100,
     MAGIC_WALL: 100,
     SHIELD: 50,
+    SWORD_SWIPE: 100,
   },
   // the rates at which players or structures regenerate health
   REGEN_TYPES: {
@@ -81,6 +87,7 @@ module.exports = Object.freeze({
     STRUCTURE: 0,
     MAGIC_WALL: 0,
     SHIELD: 5,
+    SWORD_SWIPE: 0,
   },
   // how long it will take before regenerating health for every player
   REGEN_TIME: 5,
@@ -121,7 +128,7 @@ module.exports = Object.freeze({
     DASH: 4,
     //Warrior
     WARRIOR: 25,
-    SWORD_SWIPE: 5,
+    SWORD_SWIPE: 30,
     SHIELD_BASH: 10,
     SHIELD: 20,
     //Brute
@@ -139,7 +146,7 @@ module.exports = Object.freeze({
     //Mage
     MAGE: 0,
     ENERGY_BALL: 7,
-    HEALING_RING: -15,
+    HEALING_RING: 0,
     MAGIC_WALL: 25,
     //Rogue
     ROGUE: 0,
@@ -159,13 +166,40 @@ module.exports = Object.freeze({
     //Structures
     STRUCTURE: 25,
   },
+  // determines how much damage an object does, either once on contact or overtime
+  HEALING_TYPES: {
+    PLAYER: 0,
+    BULLET: 0,
+    //Mage
+    MAGE: 0,
+    ENERGY_BALL: 0,
+    HEALING_RING: 15,
+    MAGIC_WALL: 0,
+    //Rogue
+    ROGUE: 0,
+    KNIFE_THROW: 0,
+    INVISIBILITY: 0,
+    DASH: 0,
+    //Warrior
+    WARRIOR: 0,
+    SWORD_SWIPE: 0,
+    SHIELD_BASH: 0,
+    SHIELD: 0,
+    //Brute
+    BRUTE: 0,
+    FIST_SMASH: 0,
+    GROUND_POUND: 0,
+    RAGE: 0,
+    //Structures
+    STRUCTURE: 0,
+  },
   // determines how fast an object moves, in pixels per second
   SPEED_TYPES: {
     PLAYER: 400,
-    MAGE: 300,
-    ROGUE: 300,
-    WARRIOR: 300,
-    BRUTE: 300,
+    MAGE: 200,
+    ROGUE: 200,
+    WARRIOR: 200,
+    BRUTE: 200,
     BULLET: 800,
     //Mage
     ENERGY_BALL: 600,
@@ -176,7 +210,7 @@ module.exports = Object.freeze({
     INVISIBILITY: 500,
     DASH: 1200,
     //Warrior
-    SWORD_SWIPE: 400,
+    SWORD_SWIPE: 0,
     SHIELD_BASH: 900,
     SHIELD: 0,
     //Brute
@@ -209,6 +243,52 @@ module.exports = Object.freeze({
     //Structures 
     STRUCTURE: 8.0,
   },
+  // determines how many targets a projectile can pass through
+  PROJ_NUM_HITS: {
+    PLAYER: null,
+    BULLET: 1,
+    //Mage
+    ENERGY_BALL: 2,
+    HEALING_RING: null,
+    MAGIC_WALL: null,
+    //Rogue
+    KNIFE_THROW: 1,
+    INVISIBILITY: null,
+    DASH: null,
+    //Warrior
+    SWORD_SWIPE: 3,
+    SHIELD_BASH: 1,
+    SHIELD: null,
+    //Brute
+    FIST_SMASH: 4,
+    GROUND_POUND: null,
+    RAGE: null,
+    //Structures 
+    STRUCTURE: null,
+  },
+  // determines how long a projectile lasts
+  PROJ_HEALTH: {
+    PLAYER: null,
+    BULLET: null,
+    //Mage
+    ENERGY_BALL: null,
+    HEALING_RING: 150,
+    MAGIC_WALL: 100,
+    //Rogue
+    KNIFE_THROW: null,
+    INVISIBILITY: null,
+    DASH: null,
+    //Warrior
+    SWORD_SWIPE: null,
+    SHIELD_BASH: null,
+    SHIELD: 100.0,
+    //Brute
+    FIST_SMASH: 0.4,
+    GROUND_POUND: 8.0,
+    RAGE: 8.0,
+    //Structures 
+    STRUCTURE: 8.0,
+  },
   // determines how hard an object is to push
   MASS_TYPES: {
     PLAYER: 1.0,
@@ -219,11 +299,7 @@ module.exports = Object.freeze({
     STRUCTURE: 4.0,
     MAGIC_WALL: 5.0,
     SHIELD: 2.0,
-  },
-  // used as a flag in projectile objects
-  AoE_TYPES: { 
-    HEAL: 'heal',
-    DAMAGE: 'damage',
+    SWORD_SWIPE: 1.5,
   },
   INVISIBILITY: {
     FULL: 1.0, // fully invisible

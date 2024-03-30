@@ -10,6 +10,7 @@ class Object {
     this.speed = 0;
     this.team = team;
     this.damage = 0;
+    this.healing = 0;
     this.classType = -1;
   }
   update(dt) {
@@ -60,10 +61,11 @@ class Rectangle extends Object {
     super(id, x, y, dir, speed) //x and y are center of rectangle
     this.width = w; //ids need to be different otherwise interpolates weird
     this.height = h;
-    this.radius = Math.sqrt(w * w + h * h);
-    this.hwratio = Math.atan(h/w); //Hieght/width ratio
+    this.radius = Math.sqrt(w * w + h * h); // distance from center to corner point
+    this.hwratio = Math.atan(h/w); //Height/width ratio
     this.direction = this.radiansCorrectRange(this.direction);
   }
+  // Makes sure angle stays in range of [pi, -pi]
   radiansCorrectRange(angle) {
     while (angle >= Math.PI) {
       angle -= 2 * Math.PI;
@@ -79,54 +81,46 @@ class Rectangle extends Object {
     return [x, y];
   }
   //https://gamedev.stackexchange.com/questions/86755/how-to-calculate-corner-positions-marks-of-a-rotated-tilted-rectangle#:~:text=(1)%20If%20c%20is%20the,via%20the%20trig%20formulas%20cited.
-  getTR() {
-    let dir = this.direction;
-    let tempX = this.width / 2;
-    let tempY = this.height / 2;
+  getCornerPoints() {
+    centerX = this.x; centerY = this.y; width = this.width; height = this.height; angle = this.dir;
+    // Calculate half-width and half-height
+    var halfWidth = width / 2;
+    var halfHeight = height / 2;
 
-    let rotatedX = tempX*Math.cos(dir) - tempY*Math.sin(dir);
-    let rotatedY = tempX*Math.sin(dir) + tempY*Math.cos(dir);
+    angle = this.radiansCorrectRange(angle);
 
-    return [this.x + rotatedX, this.y + rotatedY];
-  }
-  getBR() {
-    let dir = this.direction;
-    let tempX = this.width / 2;
-    let tempY = -this.height / 2;
+    // Calculate the cos and sin of the angle
+    var cosAngle = Math.cos(angleRad);
+    var sinAngle = Math.sin(angleRad);
 
-    let rotatedX = tempX*Math.cos(dir) - tempY*Math.sin(dir);
-    let rotatedY = tempX*Math.sin(dir) + tempY*Math.cos(dir);
+    // Calculate the coordinates of the corners
+    var x1 = centerX + halfWidth * cosAngle - halfHeight * sinAngle; // Top left x
+    var y1 = centerY + halfWidth * sinAngle + halfHeight * cosAngle; // Top left y
 
-    return [this.x + rotatedX, this.y + rotatedY];
-  }
-  getBL() {
-    let dir = this.direction;
-    let tempX = -this.width / 2;
-    let tempY = -this.height / 2;
+    var x2 = centerX - halfWidth * cosAngle - halfHeight * sinAngle; // Top right x
+    var y2 = centerY - halfWidth * sinAngle + halfHeight * cosAngle; // Top right y
 
-    let rotatedX = tempX*Math.cos(dir) - tempY*Math.sin(dir);
-    let rotatedY = tempX*Math.sin(dir) + tempY*Math.cos(dir);
+    var x3 = centerX - halfWidth * cosAngle + halfHeight * sinAngle; // Bottom right x
+    var y3 = centerY - halfWidth * sinAngle - halfHeight * cosAngle; // Bottom right y
 
-    return [this.x + rotatedX, this.y + rotatedY];
-  }
-  getTL() {
-    let dir = this.direction;
-    let tempX = -this.width / 2;
-    let tempY = this.height / 2;
+    var x4 = centerX + halfWidth * cosAngle + halfHeight * sinAngle; // Bottom left x
+    var y4 = centerY + halfWidth * sinAngle - halfHeight * cosAngle; // Bottom left y
 
-    let rotatedX = tempX*Math.cos(dir) - tempY*Math.sin(dir);
-    let rotatedY = tempX*Math.sin(dir) + tempY*Math.cos(dir);
-
-    return [this.x + rotatedX, this.y - rotatedY];
-  }
+    // Return the coordinates of the corners as an array of dicts
+    return [
+        {x: x1, y: y1}, // Top left
+        {x: x2, y: y2}, // Top right
+        {x: x3, y: y3}, // Bottom right
+        {x: x4, y: y4}  // Bottom left
+    ];
+}
   update(dt) {
     this.direction += .01;
     this.direction = this.radiansCorrectRange(this.direction);
     super.update(dt);
-    //this.dir = this.radiansCorrectRange(this.dir + .01);
   }
   serializeForUpdate() {
-    console.log("this.getTL(), type", this.getTL(), " ", typeof(this.getTL()[0]));
+    //console.log("this.getTL(), type", this.getTL(), " ", typeof(this.getTL()[0]));
     return {
       ...(super.serializeForUpdate()),
       direction: this.direction,

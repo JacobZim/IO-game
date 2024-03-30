@@ -1,0 +1,3 @@
+[submodule "src/server/js-intersect"]
+	path = src/server/js-intersect
+	url = https://github.com/vrd/js-intersect.git
