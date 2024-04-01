@@ -2,6 +2,12 @@ const Object = require('./object');
 const shortid = require('shortid');
 const Constants = require('../shared/constants');
 
+C_ATTRIBUTES = ['PROJ_LIFESPAN','RADIUS_TYPES','DAMAGE_TYPES',
+  'CLASS_TYPES','SPEED_TYPES','MASS_TYPES','MAX_HEALTH_TYPES',
+  'MAX_HEALTH_TYPES','ARMOR_TYPES']
+ATTRIBUTES = ['lifespan','radius','damage',
+  'classType','speed','mass','hp',
+  'maxhp','armor']
 
 // Structures are Objects that have more persistence
 // i.e. walls, shields, and they generally stop 
@@ -10,16 +16,11 @@ class Structure extends Object.Object {
   constructor(parentID, x, y, dir, team) {
     super(shortid(), x, y, dir, team);
     this.parentID = parentID;
-    this.lifespan = Constants.PROJ_LIFESPAN.STRUCTURE;
     this.currenttime = 0;
-    this.radius = Constants.RADIUS_TYPES.STRUCTURE;
-    this.damage = Constants.DAMAGE_TYPES.STRUCTURE;
-    this.classType = Constants.CLASS_TYPES.STRUCTURE;
-    this.speed = Constants.SPEED_TYPES.STRUCTURE;
-    this.mass = Constants.MASS_TYPES.STRUCTURE;
-    this.hp = Constants.MAX_HEALTH_TYPES.STRUCTURE;
-    this.maxhp = Constants.MAX_HEALTH_TYPES.STRUCTURE;
+    for (let i = 0; i < ATTRIBUTES.length; i++) {
+      this[ATTRIBUTES[i]] = Constants[C_ATTRIBUTES[i]].STRUCTURE;
     }
+  }
     // Returns true if the structure should be destroyed
   update(dt) {
     super.update(dt);
@@ -44,17 +45,12 @@ class Structure extends Object.Object {
 class MagicWall extends Structure {
     constructor(parentID, x, y, dir, team, finX, finY) {
         super(parentID, x, y, dir, team);
-        this.speed = Constants.SPEED_TYPES.MAGIC_WALL;
         this.startX = x;
         this.startY = y;
         this.distance = this.distanceTo2(finX, finY);
-        this.lifespan = Constants.PROJ_LIFESPAN.MAGIC_WALL;
-        this.hp = Constants.MAX_HEALTH_TYPES.MAGIC_WALL;
-        this.maxhp = Constants.MAX_HEALTH_TYPES.MAGIC_WALL;
-        this.radius = Constants.RADIUS_TYPES.MAGIC_WALL;
-        this.damage = Constants.DAMAGE_TYPES.MAGIC_WALL;
-        this.classType = Constants.CLASS_TYPES.MAGIC_WALL;
-        this.mass = Constants.MASS_TYPES.MAGIC_WALL;
+        for (let i = 0; i < ATTRIBUTES.length; i++) {
+          this[ATTRIBUTES[i]] = Constants[C_ATTRIBUTES[i]].MAGIC_WALL;
+        }
     }
     // Returns true if the projectile should be destroyed
     update(dt) {
@@ -69,20 +65,16 @@ class Shield extends Structure {
         super(parentID, x, y, dir, team);
         this.startX = x;
         this.startY = y;
-        this.hp = Constants.MAX_HEALTH_TYPES.SHIELD;
-        this.maxhp = Constants.MAX_HEALTH_TYPES.SHIELD;
-        this.radius = Constants.RADIUS_TYPES.SHIELD;
-        this.damage = Constants.DAMAGE_TYPES.SHIELD;
-        this.classType = Constants.CLASS_TYPES.SHIELD;
-        this.mass = Constants.MASS_TYPES.SHIELD;
         this.speed = 0;
         this.parent = parent;
+        for (let i = 0; i < ATTRIBUTES.length; i++) {
+          this[ATTRIBUTES[i]] = Constants[C_ATTRIBUTES[i]].SHIELD;
+        }
     }
     // Returns true if the projectile should be destroyed
     update(dt) {
         this.currenttime -= dt;
-        if (super.update(dt)) return true;
-        return false;
+        return super.update(dt);
     }
     shieldupdate(x, y, direction) {
         direction -= Math.PI / 2;

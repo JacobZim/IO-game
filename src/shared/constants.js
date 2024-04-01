@@ -299,7 +299,16 @@ module.exports = Object.freeze({
     STRUCTURE: 4.0,
     MAGIC_WALL: 5.0,
     SHIELD: 2.0,
-    SWORD_SWIPE: 1.5,
+  },
+  ARMOR_TYPES: {
+    PLAYER: 1.0,
+    MAGE: 1.0,
+    ROGUE: 1.0,
+    WARRIOR: 1.0,
+    BRUTE: 1.0,
+    STRUCTURE: 2.0,
+    MAGIC_WALL: 3.0,
+    SHIELD: 3.0,
   },
   INVISIBILITY: {
     FULL: 1.0, // fully invisible
