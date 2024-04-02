@@ -16,6 +16,7 @@ const ASSET_NAMES = [
   'redHealingRing.svg',
   'blueMagicWall.svg',
   'redMagicWall.svg',
+  'rectangle.svg',
 ];
 
 const assets = {};

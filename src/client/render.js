@@ -211,7 +211,7 @@ function renderProjectile(me, projectile) {
 }
 
 function renderStructure(me, structure) {
-  const { x, y, team, radius, direction, classType, hp, maxhp } = structure;
+  const { x, y, team, radius, direction, classType, hp, maxhp, width, height } = structure;
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
   
@@ -230,7 +230,7 @@ function renderStructure(me, structure) {
       asset = getAsset('warriorBlue.svg');
     } else if (classType == Constants.CLASS_TYPES.BRUTE) {
       asset = getAsset('bruteBlue.svg');
-    } else asset = getAsset('playerBlue.svg');
+    } else asset = getAsset('rectangle.svg');
   } else if (team == 1) {
     if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
       asset = getAsset('redMagicWall.svg');
@@ -240,71 +240,49 @@ function renderStructure(me, structure) {
       asset = getAsset('warriorRed.svg');
     } else if (classType == Constants.CLASS_TYPES.BRUTE) {
       asset = getAsset('bruteRed.svg');
-    } else asset = getAsset('playerRed.svg');
+    } else asset = getAsset('rectangle.svg');
   }
   if (structure.invisible) {
     context.globalAlpha = 1.0 - player.invisble;
   }
   // Draw class asset
-  context.drawImage(
-    asset,
-    -radius,
-    -radius,
-    radius * 2,
-    radius * 2,
-  );
+  if (width) {
+    // Rectangle images
+    context.drawImage(
+      asset,
+      -width / 2,
+      (-height / 2),
+      width,
+      height,
+    )
+  } else {
+    context.drawImage(
+      asset,
+      -radius,
+      -radius,
+      radius * 2,
+      radius * 2,
+    )
+    // Draw health bar
+    context.fillStyle = 'white';
+    context.fillRect(
+      - radius / 2,
+      + radius ,
+      radius ,
+      2,
+    );
+    context.fillStyle = 'red';
+    context.fillRect(
+        - radius / 2 + radius * hp / maxhp,
+      + radius ,
+      radius * (1 - hp / maxhp),
+      2,
+    );
+  }
 
-  // Draw health bar
-  context.fillStyle = 'white';
-  context.fillRect(
-     - radius / 2,
-     + radius ,
-    radius ,
-    2,
-  );
-  context.fillStyle = 'red';
-  context.fillRect(
-      - radius / 2 + radius * hp / maxhp,
-     + radius ,
-    radius * (1 - hp / maxhp),
-    2,
-  );
   context.restore();
   context.globalAlpha = 1.0;
 }
-/*
-function renderRectangle(me, structure) {
-  const { x, y, direction, width, height, tl} = structure;
-  const canvasX = canvas.width / 2 + x - me.x;
-  const canvasY = canvas.height / 2 + y - me.y;
-  //console.log("renderStructure x, y, tl, width, height: ", x, " ",y," ",tl," ",width," ",height," ",direction);
-  console.log("tl[0], tl[1]: ", tl[0]," ",tl[1]);
-  // Draw structure
-  context.save();
-  context.translate(canvasX, canvasY);
-  context.rotate(direction);
-  var asset;
-  asset = getAsset('rectangle.svg');
-  context.drawImage(
-    asset,
-    -width / 2,//bl[0],
-    -height / 2,//bl[1],
-    width,//tr[0],
-    height//tr[1],
-  );
-  context.restore();
-  //test tl calculation
-  context.save();
-  context.translate(canvasX - x, canvasY + y);
-  context.fillStyle = 'white';
-  context.fillRect(
-    tl[0],//-width/2,
-    -tl[1],//-height/2,
-    4,
-    4,
-  );
-  context.restore();
-}*/
 
 function renderMainMenu() {
   const t = Date.now() / 7500;

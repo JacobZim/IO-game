@@ -41,7 +41,6 @@ class Player extends Object.Object {
   // Returns a newly created projectile, or null.
   update(dt) {
     this.move(dt);
-
     // Update score
     this.score += dt * Constants.SCORE_PER_SECOND;
 
@@ -185,11 +184,13 @@ class Mage extends Player {
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.MAGIC_WALL;
     let inc = Math.PI / 12;
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction        , this.team, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc    , this.team, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc+inc, this.team, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc    , this.team, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc-inc, this.team, this.mouseX, this.mouseY));
+    let width = 100;
+    let height = 25;
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction        , this.team, width, height, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc    , this.team, width, height, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc+inc, this.team, width, height, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc    , this.team, width, height, this.mouseX, this.mouseY));
+    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc-inc, this.team, width, height, this.mouseX, this.mouseY));
   }
   qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
@@ -317,8 +318,10 @@ class Warrior extends Player {
     this.bashCollisions = [];
     this.shields = [];
     this.shieldsHp = [];
+    let width = 30;
+    let height = 4;
     for(let i = 0; i < Constants.QUANTITIES.WARRIOR_SHIELDS; i++) {
-      this.shields.push(new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, this));
+      this.shields.push(new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, width, height, this));
       this.shieldsHp.push(Constants.MAX_HEALTH_TYPES.SHIELD);
     }
     this.shieldsActive = false;

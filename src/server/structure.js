@@ -42,9 +42,39 @@ class Structure extends Object.Object {
   }
 }
 
-class MagicWall extends Structure {
-    constructor(parentID, x, y, dir, team, finX, finY) {
-        super(parentID, x, y, dir, team);
+class StructureRect extends Object.Rectangle {
+  constructor(parentID, x, y, dir, team, w, h) {
+    super(shortid(), x, y, dir, team, w, h);
+    this.parentID = parentID;
+    this.currenttime = 0;
+    for (let i = 0; i < ATTRIBUTES.length; i++) {
+      this[ATTRIBUTES[i]] = Constants[C_ATTRIBUTES[i]].STRUCTURE;
+    }
+  }
+    // Returns true if the structure should be destroyed
+  update(dt) {
+    super.update(dt);
+    this.currenttime += dt;
+    if (this.currenttime >= this.lifespan) return true;
+    if (this.hp <= 0) return true;
+    return this.x < 0 || this.x > Constants.MAP_SIZE || this.y < 0 || this.y > Constants.MAP_SIZE;
+  }
+  serializeForUpdate() {
+    return {
+      ...(super.serializeForUpdate()),
+      hp: this.hp,
+      maxhp: this.maxhp,
+    };
+  }
+  takeDamage(damage) {
+    this.hp -= damage;
+    if (this.hp > this.maxhp) this.hp = this.maxhp;
+  }
+}
+
+class MagicWall extends StructureRect {
+    constructor(parentID, x, y, dir, team, w, h, finX, finY) {
+        super(parentID, x, y, dir, team, w, h);
         this.startX = x;
         this.startY = y;
         this.distance = this.distanceTo2(finX, finY);
@@ -60,9 +90,9 @@ class MagicWall extends Structure {
     }
 }
 
-class Shield extends Structure {
-    constructor(parentID, x, y, dir, team, parent) {
-        super(parentID, x, y, dir, team);
+class Shield extends StructureRect {
+    constructor(parentID, x, y, dir, team, w, h, parent) {
+        super(parentID, x, y, dir, team, w, h);
         this.startX = x;
         this.startY = y;
         this.speed = 0;

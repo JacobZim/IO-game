@@ -21,38 +21,29 @@ function detectCollisionRectCirc(rectangle, circle) {
   var rectCenterY = rectangle.y;
 
   // Calculate the position of the circle relative to the rotated rectangle
-  var dx = Math.abs(circle.x - rectCenterX);
-  var dy = Math.abs(circle.y - rectCenterY);
+  var dx = circle.x - rectCenterX;
+  var dy = circle.y - rectCenterY;
 
   // Rotate the circle's position back to the unrotated rectangle's frame of reference
-  var angle = -rectangle.direction; // Negative because we're rotating back
+  var angle = rectangle.direction; // Positive because we're rotating back
   var cosAngle = Math.cos(angle);
   var sinAngle = Math.sin(angle);
-  var rotatedDx = dx * cosAngle - dy * sinAngle;
-  var rotatedDy = dx * sinAngle + dy * cosAngle;
+  var rotatedDx = dx * cosAngle + dy * sinAngle; // Note the change in sign
+  var rotatedDy = -dx * sinAngle + dy * cosAngle; // Note the change in sign
 
   // Calculate the half-width and half-height of the rotated rectangle
   var rotatedHalfWidth = rectangle.width / 2;
   var rotatedHalfHeight = rectangle.height / 2;
 
-  // Check if the rotated circle center is within the bounds of the rotated rectangle
-  if (Math.abs(rotatedDx) <= rotatedHalfWidth + circle.radius && Math.abs(rotatedDy) <= rotatedHalfHeight + circle.radius) {
-      return true; // Circle intersects with rectangle
-  }
-
-  // Calculate the nearest point on the rotated rectangle's boundary to the rotated circle center
+  // Calculate the nearest point on the rectangle's boundary to the circle center
   var nearestX = Math.max(-rotatedHalfWidth, Math.min(rotatedHalfWidth, rotatedDx));
   var nearestY = Math.max(-rotatedHalfHeight, Math.min(rotatedHalfHeight, rotatedDy));
 
-  // Calculate the distance between the nearest point and the rotated circle center
-  var distance = Math.sqrt((rotatedDx - nearestX) ** 2 + (rotatedDy - nearestY) ** 2);
+  // Calculate the distance between the nearest point and the circle center
+  var distanceSquared = (rotatedDx - nearestX) ** 2 + (rotatedDy - nearestY) ** 2;
 
-  // Check if the distance is less than or equal to the circle's radius
-  if (distance <= circle.radius) {
-      return true; // Circle intersects with rectangle
-  }
-
-  return false; // No intersection
+  // Check if the distance is less than or equal to the circle's radius squared
+  return distanceSquared <= (circle.radius ** 2);
 }
 
 // Return true if there is Rectangle on Rectangle collision.
