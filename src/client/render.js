@@ -253,7 +253,7 @@ function renderStructure(me, structure) {
       -width / 2,
       (-height / 2),
       width,
-      height,
+      height  * (hp / maxhp) + 2,
     )
   } else {
     context.drawImage(

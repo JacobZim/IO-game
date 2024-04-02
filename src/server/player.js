@@ -184,7 +184,7 @@ class Mage extends Player {
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.MAGIC_WALL;
     let inc = Math.PI / 12;
-    let width = 100;
+    let width = 50;
     let height = 25;
     structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction        , this.team, width, height, this.mouseX, this.mouseY));
     structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc    , this.team, width, height, this.mouseX, this.mouseY));
@@ -319,17 +319,25 @@ class Warrior extends Player {
     this.shields = [];
     this.shieldsHp = [];
     let width = 30;
-    let height = 4;
+    let height = 10;
     for(let i = 0; i < Constants.QUANTITIES.WARRIOR_SHIELDS; i++) {
       this.shields.push(new Structures.Shield(this.id, this.x, this.y, this.direction, this.team, width, height, this));
       this.shieldsHp.push(Constants.MAX_HEALTH_TYPES.SHIELD);
     }
     this.shieldsActive = false;
-    this.swords = [];
+    this.cutdir = 1; // binary operator that switches direction of cut every time
+    // this.swords = [];
+    // for(let i = 0; i < Constants.QUANTITIES.WARRIOR_SWORDS; i++) {
+    //   this.swords.push(new Projectiles.WarriorSwipe(this.id, this.x, this.y, this.direction, this.team, width, height, this));
+    // }
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.SWORD_SWIPE;
-    structures.push(new Structures.WarriorSwipe(this.id, this.x, this.y, this.direction, this.team));
+    let width = 20;
+    let height = 50;
+    projectiles.push(new Projectiles.WarriorSwipe(this.id, this.x, this.y, this.direction, this.team, width, height, this, this.cutdir));
+    if (this.cutdir) this.cutdir = 0;
+    else this.cutdir = 1;
   }
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.SHIELD_BASH;

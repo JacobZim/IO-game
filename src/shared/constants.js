@@ -233,7 +233,7 @@ module.exports = Object.freeze({
     INVISIBILITY: 0.8,
     DASH: 0.3,
     //Warrior
-    SWORD_SWIPE: 0.5,
+    SWORD_SWIPE: 0.3,
     SHIELD_BASH: 0.4,
     SHIELD: 100.0,
     //Brute
