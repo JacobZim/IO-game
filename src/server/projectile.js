@@ -18,6 +18,7 @@ class Projectile extends Object.Object {
     this.selfheal = false; // Can you hit/heal yourself with this ability
     this.classType = Constants.CLASS_TYPES.BULLET;
     this.speed = Constants.SPEED_TYPES.BULLET;
+    this.pierce = Constants.PROJ_PIERCE.BULLET;
   }
   // Returns true if the projectile should be destroyed
   update(dt) {
@@ -26,7 +27,11 @@ class Projectile extends Object.Object {
     if (this.currenttime >= this.lifespan) return true;
     return this.x < 0 || this.x > Constants.MAP_SIZE || this.y < 0 || this.y > Constants.MAP_SIZE;
   }
-  collide(dt) {}
+  collide(dt, entity) {
+    if (entity.armor > this.pierce) {
+      this.currenttime = this.lifespan;
+    }
+  }
   hasCollided(object) {
     return false;
   }
@@ -52,7 +57,11 @@ class ProjectileRect extends Object.Rectangle {
     if (this.currenttime >= this.lifespan) return true;
     return this.x < 0 || this.x > Constants.MAP_SIZE || this.y < 0 || this.y > Constants.MAP_SIZE;
   }
-  collide(dt) {}
+  collide(dt, entity) {
+    if (entity.armor > this.pierce) {
+      this.currenttime = this.lifespan;
+    }
+  }
 }
 // A DiscreteProjectile hits something once for contant damage / heal
 // and hits a discrete amount of things before being deleted
@@ -70,6 +79,7 @@ class DiscreteProjectile extends Projectile {
   collide(dt, entity) {
     this.numHits -= 1;
     this.collided.push(entity);
+    super.collide(dt, entity);
     if (entity.team == this.team) {
       return this.healing;
     } 
@@ -96,6 +106,7 @@ class ContinuousProjectile extends Projectile {
     return super.update(dt);
   }
   collide(dt, entity) {
+    super.collide(dt, entity);
     if (entity.team == this.team) {
       let heal = this.healing * dt;
       this.resourcePool -= heal;
@@ -125,6 +136,7 @@ class DiscreteProjectileRect extends ProjectileRect {
   collide(dt, entity) {
     this.numHits -= 1;
     this.collided.push(entity);
+    super.collide(dt, entity);
     if (entity.team == this.team) {
       return this.healing;
     } 
@@ -151,6 +163,7 @@ class ContinuousProjectileRect extends ProjectileRect {
     return super.update(dt);
   }
   collide(dt, entity) {
+    super.collide(dt, entity);
     if (entity.team == this.team) {
       heal = this.healing * dt;
       this.resourcePool -= heal;
@@ -175,6 +188,7 @@ class EnergyBall extends DiscreteProjectile {
     this.damage = Constants.DAMAGE_TYPES.ENERGY_BALL;
     this.classType = Constants.CLASS_TYPES.ENERGY_BALL;
     this.numHits = Constants.PROJ_NUM_HITS.ENERGY_BALL;
+    this.pierce = Constants.PROJ_PIERCE.ENERGY_BALL;
   }
   // Returns true if the projectile should be destroyed
   update(dt) {
@@ -196,6 +210,7 @@ class HealingRing extends ContinuousProjectile {
     this.classType = Constants.CLASS_TYPES.HEALING_RING;
     this.healing = Constants.HEALING_TYPES.HEALING_RING;
     this.selfheal = true;
+    this.pierce = Constants.PROJ_PIERCE.HEALING_RING;
   }
   // Returns true if the projectile should be destroyed
   update(dt) {
@@ -213,6 +228,7 @@ class KnifeThrow extends DiscreteProjectile {
       this.damage = Constants.DAMAGE_TYPES.KNIFE_THROW * 5;
     else this.damage = Constants.DAMAGE_TYPES.KNIFE_THROW;
     this.classType = Constants.CLASS_TYPES.KNIFE_THROW;
+    this.pierce = Constants.PROJ_PIERCE.KNIFE_THROW;
   }
   // Returns true if the projectile should be destroyed
   update(dt) {
@@ -227,6 +243,7 @@ class WarriorSwipe extends DiscreteProjectileRect {
     this.lifespan = Constants.PROJ_LIFESPAN.SWORD_SWIPE; // this determines how fast the sword swipes across its arc
     this.cutdir = cutdir; // 0 = left-to-right, 1 = right-to-left
     this.swipeupdate();
+    this.pierce = Constants.PROJ_PIERCE.SWORD_SWIPE;
   }
   swipeupdate() {
     let x = this.parent.x;
@@ -251,6 +268,41 @@ class WarriorSwipe extends DiscreteProjectileRect {
     return super.update(dt);
   }
 }
+class BruteSwipe extends DiscreteProjectile {
+  constructor(parentID, x, y, dir, team, parent, cutdir) {
+    super(parentID, x, y, dir, team);
+    this.parent = parent;
+    this.radius = Constants.RADIUS_TYPES.FIST_SMASH;
+    this.lifespan = Constants.PROJ_LIFESPAN.FIST_SMASH; // this determines how fast the sword swipes across its arc
+    this.damage = Constants.DAMAGE_TYPES.FIST_SMASH;
+    this.numHits = Constants.PROJ_NUM_HITS.FIST_SMASH;
+    this.pierce = Constants.PROJ_PIERCE.FIST_SMASH;
+    this.cutdir = cutdir; // 0 = left-to-right, 1 = right-to-left
+    this.swipeupdate();
+  }
+  swipeupdate() {
+    let x = this.parent.x;
+    let y = this.parent.y;
+    let totalArc = Math.PI;
+    if (this.cutdir == 0) {
+      let startArc = this.parent.direction - (totalArc / 2);
+      let currentArc = totalArc * (this.currenttime / this.lifespan);
+      var direction = startArc + currentArc - (Math.PI / 2); // Not sure why a constant PI/2 needs to be subtracted but it does
+    } else {
+      let startArc = this.parent.direction + (totalArc / 2);
+      let currentArc = totalArc * (this.currenttime / this.lifespan);
+      var direction = startArc - currentArc - (Math.PI / 2); // Not sure why a constant PI/2 needs to be subtracted but it does
+    }
+    let dist = 60;
+    this.x = x + Math.cos(direction) * dist;
+    this.y = y + Math.sin(direction) * dist;
+    this.direction = direction + Math.PI / 2;
+  }
+  update(dt) {
+    this.swipeupdate();
+    return super.update(dt);
+  }
+}
 
 module.exports.Projectile = Projectile;
 module.exports.DiscreteProjectile = DiscreteProjectile;
@@ -261,3 +313,4 @@ module.exports.HealingRing = HealingRing;
 
 module.exports.KnifeThrow = KnifeThrow;
 module.exports.WarriorSwipe = WarriorSwipe;
+module.exports.BruteSwipe = BruteSwipe;

@@ -430,15 +430,18 @@ class Brute extends Player {
     this.radius = Constants.RADIUS_TYPES.BRUTE;
     this.damage = Constants.DAMAGE_TYPES.BRUTE;
     this.mass = Constants.MASS_TYPES.BRUTE;
+    this.cutdir = 1; // binary operator that switches direction of cut every time
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.FIST_SMASH;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    projectiles.push(new Projectiles.BruteSwipe(this.id, this.x, this.y, this.direction, this.team, this, this.cutdir));
+    if (this.cutdir) this.cutdir = 0;
+    else this.cutdir = 1;
   }
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.GROUND_POUND;
     let inc = Math.PI / 12;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction        , this.team));
+    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
   qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;

@@ -133,7 +133,7 @@ module.exports = Object.freeze({
     SHIELD: 20,
     //Brute
     BRUTE: 30,
-    FIST_SMASH: 10,
+    FIST_SMASH: 20,
     GROUND_POUND: 50,
     RAGE: 25,
     //Structures
@@ -289,6 +289,31 @@ module.exports = Object.freeze({
     //Structures 
     STRUCTURE: 8.0,
   },
+  // Pierce armor of equal or lower level
+  // 10 means should not be stopped by armor generally
+  // General scale of 1-7, odd numbers
+  PROJ_PIERCE: {
+    PLAYER: null,
+    BULLET: 1,
+    //Mage
+    ENERGY_BALL: 1,
+    HEALING_RING: 10,
+    MAGIC_WALL: null,
+    //Rogue
+    KNIFE_THROW: 1,
+    INVISIBILITY: null,
+    DASH: 5,
+    //Warrior
+    SWORD_SWIPE: 3,
+    SHIELD_BASH: 1,
+    SHIELD: null,
+    //Brute
+    FIST_SMASH: 3,
+    GROUND_POUND: 10,
+    RAGE: null,
+    //Structures 
+    STRUCTURE: null,
+  },
   // determines how hard an object is to push
   MASS_TYPES: {
     PLAYER: 1.0,
@@ -300,15 +325,16 @@ module.exports = Object.freeze({
     MAGIC_WALL: 5.0,
     SHIELD: 2.0,
   },
+  // General scale of 1-7, odd numbers
   ARMOR_TYPES: {
-    PLAYER: 1.0,
-    MAGE: 1.0,
-    ROGUE: 1.0,
-    WARRIOR: 1.0,
-    BRUTE: 1.0,
-    STRUCTURE: 2.0,
-    MAGIC_WALL: 3.0,
-    SHIELD: 3.0,
+    PLAYER: 1,
+    MAGE: 1,
+    ROGUE: 1,
+    WARRIOR: 1,
+    BRUTE: 1,
+    STRUCTURE: 7,
+    MAGIC_WALL: 5,
+    SHIELD: 3,
   },
   INVISIBILITY: {
     FULL: 1.0, // fully invisible
