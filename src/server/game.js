@@ -148,7 +148,6 @@ class Game {
     Object.keys(this.sockets).forEach(playerID => {
       const player = this.players[playerID];
       const [newProjectiles, newStructures] = player.update(dt);
-      //console.log("newProjectiles, newStructures", newProjectiles, newStructures);
       if (newProjectiles) {
         newProjectiles.forEach(proj => {
           if (proj) this.projectiles.push(proj);
@@ -170,9 +169,9 @@ class Game {
       }
     });
     this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles.includes(projectile));
-    Collisions.applyPlayerCollisions(Object.values(this.players), dt);
-    Collisions.applyPlayerStructureCollisions(Object.values(this.players), this.structures, dt);
-    Collisions.applyStructureCollisions(this.structures, dt);
+    Collisions.applyPhysicalCollisions(Object.values(this.players), Object.values(this.players), dt);
+    Collisions.applyPhysicalCollisions(Object.values(this.players), this.structures, dt);
+    Collisions.applyPhysicalCollisions(this.structures, this.structures, dt);
     const destroyedProjectiles2 = Collisions.applyProjectileCollisions(this.structures, this.projectiles, dt);
     this.projectiles = this.projectiles.filter(projectile => !destroyedProjectiles2.includes(projectile));
     // Check if structures are dead

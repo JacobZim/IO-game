@@ -102,7 +102,7 @@ class EnergyBall extends DiscreteProjectile {
   }
 }
 
-class HealingRing extends Projectile {
+class HealingRing extends ContinuousProjectile {
   constructor(parentID, x, y, dir, team, finX, finY) {
     super(parentID, finX, finY, dir, team);
     this.speed = Constants.SPEED_TYPES.HEALING_RING;
@@ -122,7 +122,7 @@ class HealingRing extends Projectile {
   }
 }
 
-class KnifeThrow extends Projectile {
+class KnifeThrow extends DiscreteProjectile {
   constructor(parentID, x, y, dir, team, invis) {
     super(parentID, x, y, dir, team);
     this.speed = Constants.SPEED_TYPES.KNIFE_THROW;

@@ -76,7 +76,7 @@ function detectCollision(o1, o2) {
   } else if (o1 instanceof Object && o2 instanceof Object) {
     return detectCollisionCircCirc(o1,o2);
   } else {
-    console.error("Bad arguements for detect collisions")
+    throw("Bad arguements for detect collisions")
   }
 }
 
@@ -92,7 +92,6 @@ function applyProjectileCollisions(objects, projectiles, dt) {
       }
       // collision detected
       if (detectCollision(projectile, object)) {
-        console.log("Collision detected");
         // if Discrete Projectile and not collided before
         if (!(projectile.hasCollided(object))) {
           projectileCollision(object, projectile, dt);
@@ -114,98 +113,34 @@ function projectileCollision(object, projectile, dt) {
     else if (projectile.selfheal == true) {
       object.takeHealing(projectile.collide(dt, object));
     }
-    else {
-      console.log("friendly else statement");
-    }
   // enemy object, damaging projectile
   } else if (object.team != projectile.team && projectile.damage > 0) {
-      console.log("enemy spotted");
       object.takeDamage(projectile.collide(dt, object));
-  } else {
-    console.log("no collision else statement");
   }
 }
 
 
-// Returns an array of projectiles to be destroyed.
-function applyStructureProjectileCollisions(structures, projectiles, dt) {
-  const destroyedStructures = [];
-  for (let i = 0; i < projectiles.length; i++) {
-    // Look for a player (who didn't create the projectile) to collide each projectile with.
-    // As soon as we find one, break out of the loop to prevent double counting a projectile.
-    for (let j = 0; j < structures.length; j++) {
-      const projectile = projectiles[i];
-      const structure = structures[j];
-      if (detectCollision(projectile, structure)) {
-        if (projectile instanceof Projectile.DiscreteProjectile) {
-          if (structure.team != projectile.team && projectile.damage > 0) {
-            structure.takeDamage(projectile.damage);
-            projectile.collide(dt);
-          } else if (structure.team == projectile.team && projectile.healing > 0 && structure.hp < structure.maxhp) {
-            structure.takeHealing(projectile.healing);
-            projectile.collide(dt);
-          } 
-        } else if (projectile instanceof Projectile.ContinuousProjectile) {
-          if (structure.team != projectile.team && projectile.damage > 0) {
-            structure.takeDamage(projectile.damage * dt);
-            projectile.collide(dt);
-          } else if (structure.team == projectile.team && projectile.healing > 0 && structure.hp < structure.maxhp) {
-            structure.takeHealing(projectile.healing * dt);
-            structure.collide(dt);
-          }
-        }
-      }
-    }
-  }
-  return destroyedStructures;
-}
-
-
-function applyPlayerCollisions(players, dt) {
+// Apply collision physics and other effects on 
+// non-projectile objects, i.e. players, structures
+// Objects should have mass and push eachother
+function applyPhysicalCollisions(objects1, objects2, dt) {
   // after each player has move()d, check if any are overlapping and apply collision between the two
-  for (let j = 0; j < players.length; j++) {
-    for (let i = j + 1; i < players.length; i++) {
-      const player = players[j];
-      const other = players[i];
-      if (player.distanceTo(other) <= player.radius + other.radius) {
-        collidePlayers(player, other, dt);
+  for (let j = 0; j < objects1.length; j++) {
+    for (let i = 0; i < objects2.length; i++) {
+      const o1 = objects1[j];
+      const o2 = objects2[i];
+      if (detectCollision(o1,o2) && o1.team != o2.team) {
+        collidePhysicalObjects(o1, o2, dt);
       }
     }
   }
   return;
 }
-function applyPlayerStructureCollisions(players, structures, dt) {
-  // after each player has move()d, check if any are overlapping and apply collision between the two
-  for (let j = 0; j < players.length; j++) {
-    for (let i = 0; i < structures.length; i++) {
-      const player = players[j];
-      const structure = structures[i];
-      if (player.distanceTo(structure) <= player.radius + structure.radius &&
-      player.team != structure.team) {
-        collidePlayers(player, structure, dt);
-      }
-    }
-  }
-  return;
-}
-function applyStructureCollisions(structures, dt) {
-  // after each player has move()d, check if any are overlapping and apply collision between the two
-  for (let j = 0; j < structures.length; j++) {
-    for (let i = j + 1; i < structures.length; i++) {
-      const structure = structures[j];
-      const other = structures[i];
-      if (structure.distanceTo(other) <= structure.radius + other.radius  &&
-      structure.team != other.team) {
-        collidePlayers(structure, other, dt);
-      }
-    }
-  }
-  return;
-}
+
 
 
 // player1 and player2 can be of type player or type structure
-function collidePlayers(player1, player2, dt) {
+function collidePhysicalObjects(player1, player2, dt) {
   // collision damage 
   if (player1.dashTimer) {
     if (!player1.dashCollisions.includes(player2)) {
@@ -259,7 +194,4 @@ function collidePlayers(player1, player2, dt) {
 }
 
 module.exports.applyProjectileCollisions = applyProjectileCollisions;
-module.exports.applyStructureProjectileCollisions = applyStructureProjectileCollisions;
-module.exports.applyPlayerCollisions = applyPlayerCollisions;
-module.exports.applyPlayerStructureCollisions = applyPlayerStructureCollisions;
-module.exports.applyStructureCollisions = applyStructureCollisions;
+module.exports.applyPhysicalCollisions = applyPhysicalCollisions;

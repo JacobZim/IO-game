@@ -180,7 +180,6 @@ class Mage extends Player {
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.ENERGY_BALL;
-    console.log("proj created:",this.x, this.y)
     projectiles.push(new Projectiles.EnergyBall(this.id, this.x, this.y, this.direction, this.team));
   }
   eFire(projectiles, structures) {
