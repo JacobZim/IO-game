@@ -133,7 +133,7 @@ module.exports = Object.freeze({
     SHIELD: 20,
     //Brute
     BRUTE: 30,
-    FIST_SMASH: 20,
+    FIST_SMASH: 30,
     GROUND_POUND: 50,
     RAGE: 25,
     //Structures

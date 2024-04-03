@@ -333,8 +333,8 @@ class Warrior extends Player {
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.SWORD_SWIPE;
-    let width = 20;
-    let height = 50;
+    let width = 10;
+    let height = 40;
     projectiles.push(new Projectiles.WarriorSwipe(this.id, this.x, this.y, this.direction, this.team, width, height, this, this.cutdir));
     if (this.cutdir) this.cutdir = 0;
     else this.cutdir = 1;

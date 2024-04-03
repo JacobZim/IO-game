@@ -106,7 +106,7 @@ function projectileCollision(object, projectile, dt) {
     }
   // enemy object, damaging projectile
   } else if (object.team != projectile.team && projectile.damage > 0) {
-      object.takeDamage(projectile.collide(dt, object));
+    object.takeDamage(projectile.collide(dt, object));
   }
 }
 

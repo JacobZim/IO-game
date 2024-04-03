@@ -152,7 +152,7 @@ function renderPlayer(me, player) {
 }
 
 function renderProjectile(me, projectile) {
-  const { id, x, y, team, radius, direction, classType } = projectile;
+  const { id, x, y, team, radius, direction, classType, width, height } = projectile;
   
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
@@ -166,25 +166,27 @@ function renderProjectile(me, projectile) {
   var asset;
   if (team == 0) {
     if (classType == Constants.CLASS_TYPES.ENERGY_BALL ||
-      classType == Constants.CLASS_TYPES.KNIFE_THROW || 
-      classType == Constants.CLASS_TYPES.SWORD_SWIPE ||
+      classType == Constants.CLASS_TYPES.KNIFE_THROW ||
       classType == Constants.CLASS_TYPES.FIST_SMASH) {
         asset = getAsset('blueProjectile.svg');
     } else if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
       asset = getAsset('blueMagicWall.svg');
     } else if(classType == Constants.CLASS_TYPES.HEALING_RING) {
-      asset = getAsset('blueHealingRing.svg')
-    } else asset = getAsset('bullet.svg');
+      asset = getAsset('blueHealingRing.svg');
+    } else if(classType == Constants.CLASS_TYPES.SWORD_SWIPE) {
+      asset = getAsset('rectangle.svg');
+    }  else asset = getAsset('bullet.svg');
   } else if (team == 1) {
     if (classType == Constants.CLASS_TYPES.ENERGY_BALL ||
-      classType == Constants.CLASS_TYPES.KNIFE_THROW || 
-      classType == Constants.CLASS_TYPES.SWORD_SWIPE ||
+      classType == Constants.CLASS_TYPES.KNIFE_THROW ||
       classType == Constants.CLASS_TYPES.FIST_SMASH) {
         asset = getAsset('redProjectile.svg');
     } else if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
       asset = getAsset('redMagicWall.svg');
     } else if(classType == Constants.CLASS_TYPES.HEALING_RING) {
       asset = getAsset('redHealingRing.svg')
+    } else if(classType == Constants.CLASS_TYPES.SWORD_SWIPE) {
+      asset = getAsset('rectangle.svg');
     } else asset = getAsset('bullet.svg');
   } else {
     asset = getAsset('bullet.svg');
@@ -200,13 +202,25 @@ function renderProjectile(me, projectile) {
   //context.arc(0, 0, radius, 0, 2 * Math.PI);
   //context.fill();
   // Draw class asset
-  context.drawImage(
-    asset,
-    -radius,//canvas.width / 2 + x - me.x - Constants.RADIUS_TYPES.BULLET,
-    -radius,//canvas.height / 2 + y - me.y - Constants.RADIUS_TYPES.BULLET,
-    radius * 2,//Constants.RADIUS_TYPES.BULLET * 2,
-    radius * 2,//Constants.RADIUS_TYPES.BULLET * 2,
-  );
+  if (width) {
+    console.log("w/h:",width,height)
+    // Rectangle images
+    context.drawImage(
+      asset,
+      -width / 2,
+      (-height / 2),
+      width,
+      height,
+    )
+  } else {
+    context.drawImage(
+      asset,
+      -radius,
+      -radius,
+      radius * 2,
+      radius * 2,
+    )
+  }
   context.restore();
 }
 
@@ -247,13 +261,18 @@ function renderStructure(me, structure) {
   }
   // Draw class asset
   if (width) {
+    if ([Constants.CLASS_TYPES.SHIELD, Constants.CLASS_TYPES.MAGIC_WALL].includes(classType)) {
+      var h = height * (hp / maxhp) + 2;
+    } else {
+      var h = height;
+    }
     // Rectangle images
     context.drawImage(
       asset,
       -width / 2,
       (-height / 2),
       width,
-      height  * (hp / maxhp) + 2,
+      h,
     )
   } else {
     context.drawImage(

@@ -17,6 +17,7 @@ const ASSET_NAMES = [
   'blueMagicWall.svg',
   'redMagicWall.svg',
   'rectangle.svg',
+  'square.svg',
 ];
 
 const assets = {};

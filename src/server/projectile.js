@@ -31,6 +31,7 @@ class Projectile extends Object.Object {
     if (entity.armor > this.pierce) {
       this.currenttime = this.lifespan;
     }
+    return 0;
   }
   hasCollided(object) {
     return false;
@@ -61,6 +62,10 @@ class ProjectileRect extends Object.Rectangle {
     if (entity.armor > this.pierce) {
       this.currenttime = this.lifespan;
     }
+    return 0;
+  }
+  hasCollided(object) {
+    return false;
   }
 }
 // A DiscreteProjectile hits something once for contant damage / heal
@@ -151,8 +156,8 @@ class DiscreteProjectileRect extends ProjectileRect {
 // A Continous Projectile hits things more than once/ continuously
 // and may have a 'health' pool before it disappears
 class ContinuousProjectileRect extends ProjectileRect {
-  constructor(parentID, x, y, dir, team) {
-    super(parentID, x, y, dir, team);
+  constructor(parentID, x, y, dir, team, w, h) {
+    super(parentID, x, y, dir, team, w, h);
     this.parentID = parentID;
     this.resourcePool = 100;
     this.costPerSec = 0;
@@ -240,6 +245,7 @@ class WarriorSwipe extends DiscreteProjectileRect {
   constructor(parentID, x, y, dir, team, w, h, parent, cutdir) {
     super(parentID, x, y, dir, team, w, h);
     this.parent = parent;
+    this.classType = Constants.CLASS_TYPES.SWORD_SWIPE;
     this.lifespan = Constants.PROJ_LIFESPAN.SWORD_SWIPE; // this determines how fast the sword swipes across its arc
     this.cutdir = cutdir; // 0 = left-to-right, 1 = right-to-left
     this.swipeupdate();

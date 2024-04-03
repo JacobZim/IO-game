@@ -119,7 +119,6 @@ class Rectangle extends Object {
   serializeForUpdate() {
     return {
       ...(super.serializeForUpdate()),
-      direction: this.direction,
       width: this.width,
       height: this.height
     };
