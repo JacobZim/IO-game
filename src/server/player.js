@@ -142,12 +142,6 @@ class Player extends Object.Object {
   takeDamage(damage) {
     this.hp -= damage;
     this.regenCooldown = Constants.REGEN_TIME;
-    if (this.invisible) {
-      this.invisible -= Constants.INVISIBILITY.DAMAGE;
-      if (this.invisible < Constants.INVISIBILITY.NONE) {
-        this.invisible = Constants.INVISIBILITY.NONE;
-      }
-    }
   }
   takeHealing(healing) {
     this.hp += healing;
@@ -263,6 +257,17 @@ class Rogue extends Player {
     this.x += dt * Constants.SPEED_TYPES.DASH * Math.sin(this.dashDirection);
     this.y -= dt * Constants.SPEED_TYPES.DASH * Math.cos(this.dashDirection);
     this.direction = this.dashDirection;
+    this.dashTimer -= dt;
+  }
+  takeDamage(damage) {
+    this.hp -= damage;
+    this.regenCooldown = Constants.REGEN_TIME;
+    if (this.invisible) {
+      this.invisible -= Constants.INVISIBILITY.DAMAGE;
+      if (this.invisible < Constants.INVISIBILITY.NONE) {
+        this.invisible = Constants.INVISIBILITY.NONE;
+      }
+    }
   }
   regen(dt) {
     if (this.hp >= Constants.MAX_HEALTH_TYPES.ROGUE) {
@@ -274,11 +279,6 @@ class Rogue extends Player {
     }
   }
   update(dt) {
-    if (this.dashTimer > 0) {
-      this.dashTimer -= dt;
-    } else {
-      this.dashTimer = 0;
-    }
     if (this.invisible) {
       this.eCooldown = Constants.COOLDOWN_TYPES.INVISIBILITY
       if (this.invisible < Constants.INVISIBILITY.FULL) {
@@ -290,7 +290,8 @@ class Rogue extends Player {
     }
     if (this.dashTimer > 0) {
       this.Dash(dt);
-    } else {
+    } else if (this.dashTimer < 0) {
+      this.dashTimer = 0;
       this.dashCollisions = [];
       this.overrideMovement = false;
     }
@@ -431,10 +432,24 @@ class Brute extends Player {
     this.damage = Constants.DAMAGE_TYPES.BRUTE;
     this.mass = Constants.MASS_TYPES.BRUTE;
     this.cutdir = 1; // binary operator that switches direction of cut every time
+    this.rageTime = Constants.PROJ_LIFESPAN.RAGE;
+    this.raging = false;
+  }
+  takeDamage(damage) {
+    if (this.raging) {
+      damage = damage * Constants.DMG_REDUCTION_TYPES.RAGE;
+    }
+    this.hp -= damage;
+    this.regenCooldown = Constants.REGEN_TIME;
   }
   primaryFire(projectiles, structures) {
-    this.primaryFireCooldown = Constants.COOLDOWN_TYPES.FIST_SMASH;
-    projectiles.push(new Projectiles.BruteSwipe(this.id, this.x, this.y, this.direction, this.team, this, this.cutdir));
+    if (!this.raging) {
+      this.primaryFireCooldown = Constants.COOLDOWN_TYPES.FIST_SMASH;
+      projectiles.push(new Projectiles.BruteSwipe(this.id, this.x, this.y, this.direction, this.team, this, this.cutdir));  
+    } else {
+      this.primaryFireCooldown = Constants.COOLDOWN_TYPES.RAGING_FIST_SMASH;
+      projectiles.push(new Projectiles.RagingBruteSwipe(this.id, this.x, this.y, this.direction, this.team, this, this.cutdir));
+    }
     if (this.cutdir) this.cutdir = 0;
     else this.cutdir = 1;
   }
@@ -448,8 +463,24 @@ class Brute extends Player {
     projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
   }
   spaceFire(projectiles, structures) {
+    this.toggleRage();
+  }
+  toggleRage() {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.RAGE;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    if (!this.raging) {
+      this.radius = Constants.RADIUS_TYPES.RAGE;
+      this.speed = Constants.SPEED_TYPES.RAGE;
+      this.armor = Constants.ARMOR_TYPES.RAGE;
+    } else {
+      this.radius = Constants.RADIUS_TYPES.BRUTE;
+      this.speed = Constants.SPEED_TYPES.BRUTE;
+      this.armor = Constants.ARMOR_TYPES.BRUTE;
+    }
+    this.raging = !this.raging;
+  }
+  Rage(dt) {
+    this.rageTime -= dt;
+    this.takeHealing(Constants.HEALING_TYPES.RAGE * dt);
   }
   regen(dt) {
     if (this.hp >= Constants.MAX_HEALTH_TYPES.BRUTE) {
@@ -459,6 +490,20 @@ class Brute extends Player {
     if (this.regenCooldown <= 0) {
       this.hp += Constants.REGEN_TYPES.BRUTE * dt;
     }
+  }
+  update(dt) {
+    if (this.rageTime < 0) {
+      this.toggleRage();
+      this.rageTime = 0;
+    } else if (this.rageTime > Constants.PROJ_LIFESPAN.RAGE) {
+      this.rageTime = Constants.PROJ_LIFESPAN.RAGE;
+    } else if (this.rageTime < Constants.PROJ_LIFESPAN.RAGE && !this.raging) {
+      this.rageTime += dt * Constants.REGEN_TYPES.RAGE;
+    }
+    if (this.raging) {
+      this.Rage(dt);
+    }
+    return super.update(dt);
   }
 }
 

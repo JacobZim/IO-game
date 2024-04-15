@@ -55,6 +55,7 @@ module.exports = Object.freeze({
     SHIELD: 25,
     //Brute
     FIST_SMASH: 26,
+    RAGING_FIST_SMASH: 31,
     GROUND_POUND: 27,
     RAGE: 28,
     //Etc
@@ -70,8 +71,8 @@ module.exports = Object.freeze({
     PLAYER: 100,
     MAGE: 100,
     ROGUE: 100,
-    WARRIOR: 150,
-    BRUTE: 200,
+    WARRIOR: 175,
+    BRUTE: 250,
     STRUCTURE: 100,
     MAGIC_WALL: 100,
     SHIELD: 50,
@@ -84,6 +85,7 @@ module.exports = Object.freeze({
     ROGUE: 10,
     WARRIOR: 10,
     BRUTE: 10,
+    RAGE: 0.5,
     STRUCTURE: 0,
     MAGIC_WALL: 0,
     SHIELD: 5,
@@ -109,8 +111,9 @@ module.exports = Object.freeze({
     SHIELD: 1.0,
     //Brute
     FIST_SMASH: .6,
+    RAGING_FIST_SMASH: .5,
     GROUND_POUND: 8.0,
-    RAGE: 8.0,
+    RAGE: 2.0,
   },
   // determines how big an object is
   RADIUS_TYPES: {
@@ -134,8 +137,9 @@ module.exports = Object.freeze({
     //Brute
     BRUTE: 30,
     FIST_SMASH: 30,
+    RAGING_FIST_SMASH: 30,
     GROUND_POUND: 50,
-    RAGE: 25,
+    RAGE: 35,
     //Structures
     STRUCTURE: 25,
   },
@@ -161,6 +165,7 @@ module.exports = Object.freeze({
     //Brute
     BRUTE: 0,
     FIST_SMASH: 30,
+    RAGING_FIST_SMASH: 34,
     GROUND_POUND: 24,
     RAGE: 200,
     //Structures
@@ -188,10 +193,14 @@ module.exports = Object.freeze({
     //Brute
     BRUTE: 0,
     FIST_SMASH: 0,
+    RAGING_FIST_SMASH: 0,
     GROUND_POUND: 0,
-    RAGE: 0,
+    RAGE: 10,
     //Structures
     STRUCTURE: 0,
+  },
+  DMG_REDUCTION_TYPES: {
+    RAGE: 0.5,
   },
   // determines how fast an object moves, in pixels per second
   SPEED_TYPES: {
@@ -215,8 +224,9 @@ module.exports = Object.freeze({
     SHIELD: 0,
     //Brute
     FIST_SMASH: 400,
+    RAGING_FIST_SMASH: 425,
     GROUND_POUND: 400,
-    RAGE: 500,
+    RAGE: 250, // this determines how fast you move during rage
     //Structures
     STRUCTURE: 400,
   },
@@ -238,8 +248,9 @@ module.exports = Object.freeze({
     SHIELD: 100.0,
     //Brute
     FIST_SMASH: 0.4,
+    RAGING_FIST_SMASH: 0.35,
     GROUND_POUND: 8.0,
-    RAGE: 8.0,
+    RAGE: 6.0,
     //Structures 
     STRUCTURE: 8.0,
   },
@@ -256,11 +267,12 @@ module.exports = Object.freeze({
     INVISIBILITY: null,
     DASH: null,
     //Warrior
-    SWORD_SWIPE: 3,
+    SWORD_SWIPE: 2,
     SHIELD_BASH: 1,
     SHIELD: null,
     //Brute
-    FIST_SMASH: 4,
+    FIST_SMASH: 3,
+    RAGING_FIST_SMASH: 4,
     GROUND_POUND: null,
     RAGE: null,
     //Structures 
@@ -284,6 +296,7 @@ module.exports = Object.freeze({
     SHIELD: 100.0,
     //Brute
     FIST_SMASH: 0.4,
+    RAGING_FIST_SMASH: 0.4,
     GROUND_POUND: 8.0,
     RAGE: 8.0,
     //Structures 
@@ -308,7 +321,8 @@ module.exports = Object.freeze({
     SHIELD_BASH: 1,
     SHIELD: null,
     //Brute
-    FIST_SMASH: 3,
+    FIST_SMASH: 1,
+    RAGING_FIST_SMASH: 3,
     GROUND_POUND: 10,
     RAGE: null,
     //Structures 
@@ -319,8 +333,9 @@ module.exports = Object.freeze({
     PLAYER: 1.0,
     MAGE: 1.0,
     ROGUE: 1.0,
-    WARRIOR: 1.5,
-    BRUTE: 2.0,
+    WARRIOR: 1.25,
+    BRUTE: 1.5,
+    RAGE: 2.0,
     STRUCTURE: 4.0,
     MAGIC_WALL: 5.0,
     SHIELD: 2.0,
@@ -332,9 +347,10 @@ module.exports = Object.freeze({
     ROGUE: 1,
     WARRIOR: 1,
     BRUTE: 1,
+    RAGE: 3,
     STRUCTURE: 7,
-    MAGIC_WALL: 5,
-    SHIELD: 3,
+    MAGIC_WALL: 3,
+    SHIELD: 5,
   },
   INVISIBILITY: {
     FULL: 1.0, // fully invisible

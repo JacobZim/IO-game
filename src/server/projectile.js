@@ -250,6 +250,7 @@ class WarriorSwipe extends DiscreteProjectileRect {
     this.cutdir = cutdir; // 0 = left-to-right, 1 = right-to-left
     this.swipeupdate();
     this.pierce = Constants.PROJ_PIERCE.SWORD_SWIPE;
+    this.numHits = Constants.PROJ_NUM_HITS.SWORD_SWIPE;
   }
   swipeupdate() {
     let x = this.parent.x;
@@ -310,6 +311,18 @@ class BruteSwipe extends DiscreteProjectile {
   }
 }
 
+class RagingBruteSwipe extends BruteSwipe {
+  constructor(parentID, x, y, dir, team, parent, cutdir) {
+    super(parentID, x, y, dir, team, parent, cutdir);
+    this.radius = Constants.RADIUS_TYPES.RAGING_FIST_SMASH;
+    this.lifespan = Constants.PROJ_LIFESPAN.RAGING_FIST_SMASH; // this determines how fast the sword swipes across its arc
+    this.damage = Constants.DAMAGE_TYPES.RAGING_FIST_SMASH;
+    this.numHits = Constants.PROJ_NUM_HITS.RAGING_FIST_SMASH;
+    this.pierce = Constants.PROJ_PIERCE.RAGING_FIST_SMASH;
+    this.swipeupdate();
+  }
+}
+
 module.exports.Projectile = Projectile;
 module.exports.DiscreteProjectile = DiscreteProjectile;
 module.exports.ContinuousProjectile = ContinuousProjectile;
@@ -320,3 +333,4 @@ module.exports.HealingRing = HealingRing;
 module.exports.KnifeThrow = KnifeThrow;
 module.exports.WarriorSwipe = WarriorSwipe;
 module.exports.BruteSwipe = BruteSwipe;
+module.exports.RagingBruteSwipe = RagingBruteSwipe;

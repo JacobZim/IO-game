@@ -84,6 +84,9 @@ function interpolateObject(object1, object2, ratio) {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio);
     } else if (typeof(object1[key]) == "object" ) {//&& object1[key] != null
       console.log("object1[key]: ", object1);
+      // if you get an error here, it most likely means some attribute is not being mathed correctly
+      // this happened when certain attributes of projectiles werent set 
+      // or values were being overwritten. Check the git dif. Good luck
       interpolated[key] = [];
       for ( let i = 0; i < object1[key].length; i++ ) {
         interpolated[key][i] = object1[key][i] + (object2[key][i] - object2[key][i]) * ratio;
