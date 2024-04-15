@@ -47,6 +47,7 @@ function render() {
     // Draw all players
     renderPlayer(me, me);
     others.forEach(renderPlayer.bind(null, me));
+    renderAbilities(me);
   }
 
   // Rerun this render function on the next frame
@@ -151,6 +152,23 @@ function renderPlayer(me, player) {
   context.globalAlpha = 1.0;
 }
 
+function renderAbilities(me) {
+  let { x, y, team, radius, direction, classType, hp, maxhp, spaceCooldown, eCooldown } = me;
+  if (spaceCooldown == 0) spaceCooldown = "_";
+  else spaceCooldown = Math.floor(spaceCooldown).toString();
+  if (eCooldown == 0) eCooldown = "E";
+  else eCooldown = Math.floor(eCooldown).toString();
+  let text = eCooldown + " " + spaceCooldown;
+  let X = text.length * 30;
+  let Y = 20;
+  const canvasX = canvas.width - X;
+  const canvasY = canvas.height - Y;
+  // Draw abilities
+  context.fillStyle = 'white';
+  context.font = "48px serif";
+  context.fillText(text, canvasX, canvasY);
+}
+
 function renderProjectile(me, projectile) {
   const { id, x, y, team, radius, direction, classType, width, height } = projectile;
   
@@ -203,7 +221,7 @@ function renderProjectile(me, projectile) {
   //context.fill();
   // Draw class asset
   if (width) {
-    console.log("w/h:",width,height)
+    // console.log("w/h:",width,height)
     // Rectangle images
     context.drawImage(
       asset,

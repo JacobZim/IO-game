@@ -51,11 +51,26 @@ class Player extends Object.Object {
     // Fire a projectile(s), if needed
     let projectiles = [];
     let structures = [];
-    this.primaryFireCooldown -= dt;
-    this.eCooldown -= dt;
-    this.qCooldown -= dt;
-    this.spaceCooldown -= dt;
-    this.regenCooldown -= dt;
+    if (this.primaryFireCooldown > 0)
+      this.primaryFireCooldown -= dt;
+    if (this.primaryFireCooldown < 0)
+      this.primaryFireCooldown = 0;
+    if (this.eCooldown > 0) 
+      this.eCooldown -= dt;
+    if (this.eCooldown < 0)
+      this.eCooldown = 0;
+    if (this.qCooldown > 0) 
+      this.qCooldown -= dt;
+    if (this.qCooldown < 0)
+      this.qCooldown = 0;
+    if (this.spaceCooldown > 0)
+      this.spaceCooldown -= dt;
+    if (this.spaceCooldown < 0)
+      this.spaceCooldown = 0;
+    if (this.regenCooldown > 0) 
+      this.regenCooldown -= dt;
+    if (this.regenCooldown < 0)
+      this.regenCooldown = 0;
     if (this.primaryFireCooldown <= 0 && this.primary_firing) {
       this.primaryFire(projectiles, structures);
     }
@@ -154,6 +169,8 @@ class Player extends Object.Object {
       ...(super.serializeForUpdate()),
       hp: this.hp,
       maxhp: this.maxhp,
+      spaceCooldown: this.spaceCooldown,
+      eCooldown: this.eCooldown,
     };
   }
 }
