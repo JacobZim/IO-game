@@ -48,6 +48,7 @@ function render() {
     renderPlayer(me, me);
     others.forEach(renderPlayer.bind(null, me));
     renderAbilities(me);
+    renderResourceBar(me);
   }
 
   // Rerun this render function on the next frame
@@ -167,6 +168,47 @@ function renderAbilities(me) {
   context.fillStyle = 'white';
   context.font = "48px serif";
   context.fillText(text, canvasX, canvasY);
+}
+
+function renderResourceBar(me) {
+  const canvasX = canvas.width / 2;
+  const canvasY = canvas.height / 2;
+  let radius = me.radius;
+  if (me.rage) {
+    // Draw rage bar
+    context.fillStyle = 'orange';
+    context.fillRect(
+      canvasX - radius * me.rage,
+      canvasY + radius + 12,
+      radius * 2 * me.rage,
+      2,
+    );
+  }
+  if (me.shields && !me.shieldsActive) {
+    // Draw shields' health bars
+    let s1 = me.shields[0] / Constants.MAX_HEALTH_TYPES.SHIELD;
+    let s2 = me.shields[1] / Constants.MAX_HEALTH_TYPES.SHIELD;
+    let s3 = me.shields[2] / Constants.MAX_HEALTH_TYPES.SHIELD;
+    context.fillStyle = 'lightblue';
+    context.fillRect(
+      canvasX - radius - 1,
+      canvasY + radius + 12,
+      radius * 2 / 3 * s1,
+      2,
+    );
+    context.fillRect(
+      canvasX - radius * 1/3,
+      canvasY + radius + 12,
+      radius * 2 / 3 * s2,
+      2,
+    );
+    context.fillRect(
+      canvasX + radius * 1/3 + 1,
+      canvasY + radius + 12,
+      radius * 2 / 3 * s2,
+      2,
+    );
+  }
 }
 
 function renderProjectile(me, projectile) {

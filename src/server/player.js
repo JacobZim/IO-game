@@ -437,6 +437,13 @@ class Warrior extends Player {
     }
     return super.update(dt);
   }
+  serializeForUpdate() {
+    return {
+      ...(super.serializeForUpdate()),
+      shieldsActive: this.shieldsActive,
+      shields: this.shieldsHp,
+    };
+  }
 }
 class Brute extends Player {
   constructor(id, username, x, y, team) {
@@ -521,6 +528,12 @@ class Brute extends Player {
       this.Rage(dt);
     }
     return super.update(dt);
+  }
+  serializeForUpdate() {
+    return {
+      ...(super.serializeForUpdate()),
+      rage: this.rageTime / Constants.PROJ_LIFESPAN.RAGE,
+    };
   }
 }
 
