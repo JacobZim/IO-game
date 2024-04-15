@@ -407,25 +407,29 @@ class Warrior extends Player {
     } else {
       this.bashTimer = 0;
     }
+    // Check if all shields destroyed and update info if so
     let totalHp = 0;
-    this.shields.forEach(shield => {
-      totalHp += shield.hp;
-    })
-    if (totalHp <= 0) this.shieldsActive = false;
-    let inc = Math.PI / 4;
-    let startArc = -inc * (this.shields.length - 1) / 2;
-    for (let i = 0; i < this.shields.length; i++) {
-      this.shields[i].shieldupdate(this.x, this.y, this.direction + startArc);
-      startArc += inc;
+    for (let i = 0; i<this.shields.length; i++ ) {
+      totalHp += this.shields[i].hp;
     }
-    
-    if (!this.shieldsActive) {
+    if (totalHp <= 0 && this.shieldsActive) {
+      this.shieldsActive = false;
+      this.spaceCooldown = Constants.COOLDOWN_TYPES.SHIELD;
+      for (let i = 0; i<this.shields.length; i++ ) {
+        this.shieldsHp[i] = 0;
+      }
+    }
+    // Regen shields health if they are not active
+    if (!this.shieldsActive && this.spaceCooldown <= 0) {
       for (let i = 0; i < this.shields.length; i++) {
-        this.shieldsHp[i] += Constants.REGEN_TYPES.SHIELD * dt;
         if (this.shieldsHp[i] < 0 ) this.shieldsHp[i] = 0;
+        this.shieldsHp[i] += Constants.REGEN_TYPES.SHIELD * dt;
         if (this.shieldsHp[i] > Constants.MAX_HEALTH_TYPES.SHIELD) this.shieldsHp[i] = Constants.MAX_HEALTH_TYPES.SHIELD;
       }
     }
+    // for (let i = 0; i<this.shields.length; i++ ) {
+    //   this.shieldsHp[i] = this.shields[i].hp;
+    // }
     if (this.bashTimer > 0) {
       this.ShieldBash(dt);
     }
@@ -435,7 +439,59 @@ class Warrior extends Player {
       }
       this.overrideMovement = false;
     }
-    return super.update(dt);
+    // Parents update copy pasted here
+    this.move(dt);
+    // So that the shields update based on the new position of Warrior
+    let inc = Math.PI / 4;
+    let startArc = -inc * (this.shields.length - 1) / 2;
+    for (let i = 0; i < this.shields.length; i++) {
+      this.shields[i].shieldupdate(this.x, this.y, this.direction + startArc);
+      startArc += inc;
+    }
+    // Update score
+    this.score += dt * Constants.SCORE_PER_SECOND;
+
+    // Make sure the player stays in bounds
+    this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
+    this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
+
+    // Fire a projectile(s), if needed
+    let projectiles = [];
+    let structures = [];
+    if (this.primaryFireCooldown > 0)
+      this.primaryFireCooldown -= dt;
+    if (this.primaryFireCooldown < 0)
+      this.primaryFireCooldown = 0;
+    if (this.eCooldown > 0) 
+      this.eCooldown -= dt;
+    if (this.eCooldown < 0)
+      this.eCooldown = 0;
+    if (this.qCooldown > 0) 
+      this.qCooldown -= dt;
+    if (this.qCooldown < 0)
+      this.qCooldown = 0;
+    if (this.spaceCooldown > 0)
+      this.spaceCooldown -= dt;
+    if (this.spaceCooldown < 0)
+      this.spaceCooldown = 0;
+    if (this.regenCooldown > 0) 
+      this.regenCooldown -= dt;
+    if (this.regenCooldown < 0)
+      this.regenCooldown = 0;
+    if (this.primaryFireCooldown <= 0 && this.primary_firing) {
+      this.primaryFire(projectiles, structures);
+    }
+    if (this.eCooldown <= 0 && this.eFiring) {
+      this.eFire(projectiles, structures);
+    }
+    if (this.qCooldown <= 0 && this.qFiring) {
+      this.qFire(projectiles, structures);
+    }
+    if (this.spaceCooldown <= 0 && this.spaceFiring) {
+      this.spaceFire(projectiles, structures);
+    }
+    this.regen(dt);
+    return [projectiles, structures];
   }
   serializeForUpdate() {
     return {

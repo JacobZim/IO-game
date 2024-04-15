@@ -108,7 +108,7 @@ module.exports = Object.freeze({
     //Warrior
     SWORD_SWIPE: 0.5,
     SHIELD_BASH: 8.0,
-    SHIELD: 1.0,
+    SHIELD: 1.5,
     //Brute
     FIST_SMASH: .6,
     RAGING_FIST_SMASH: .5,

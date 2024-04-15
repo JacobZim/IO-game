@@ -38,7 +38,9 @@ class Structure extends Object.Object {
   }
   takeDamage(damage) {
     this.hp -= damage;
-    if (this.hp > this.maxhp) this.hp = this.maxhp;
+    if (this.hp < 0) {
+      this.hp = 0;
+    }
   }
 }
 
@@ -68,7 +70,6 @@ class StructureRect extends Object.Rectangle {
   }
   takeDamage(damage) {
     this.hp -= damage;
-    if (this.hp > this.maxhp) this.hp = this.maxhp;
   }
 }
 
@@ -113,11 +114,11 @@ class Shield extends StructureRect {
         this.y = y + Math.sin(direction) * shielddist;
         this.direction = direction + Math.PI / 2;
     }
-    regen(dt) {
-        this.hp += Constants.REGEN_TYPES.SHIELD * dt;
-        if (this.hp < 0 ) this.hp = 0;
-        if (this.hp > Constants.MAX_HEALTH_TYPES.SHIELD) this.hp = Constants.MAX_HEALTH_TYPES.SHIELD;
-    }
+    // regen(dt) {
+    //     this.hp += Constants.REGEN_TYPES.SHIELD * dt;
+    //     if (this.hp < 0 ) this.hp = 0;
+    //     if (this.hp > Constants.MAX_HEALTH_TYPES.SHIELD) this.hp = Constants.MAX_HEALTH_TYPES.SHIELD;
+    // }
 }
 
 class WarriorSwipe extends Structure {

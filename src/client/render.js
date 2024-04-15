@@ -192,20 +192,20 @@ function renderResourceBar(me) {
     context.fillStyle = 'lightblue';
     context.fillRect(
       canvasX - radius - 1,
-      canvasY + radius + 12,
+      canvasY + radius + 4,
       radius * 2 / 3 * s1,
       2,
     );
     context.fillRect(
       canvasX - radius * 1/3,
-      canvasY + radius + 12,
+      canvasY + radius + 4,
       radius * 2 / 3 * s2,
       2,
     );
     context.fillRect(
       canvasX + radius * 1/3 + 1,
-      canvasY + radius + 12,
-      radius * 2 / 3 * s2,
+      canvasY + radius + 4,
+      radius * 2 / 3 * s3,
       2,
     );
   }
