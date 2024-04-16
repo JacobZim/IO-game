@@ -154,12 +154,14 @@ function renderPlayer(me, player) {
 }
 
 function renderAbilities(me) {
-  let { x, y, team, radius, direction, classType, hp, maxhp, spaceCooldown, eCooldown } = me;
+  let { x, y, team, radius, direction, classType, hp, maxhp, spaceCooldown, eCooldown, qCooldown } = me;
   if (spaceCooldown == 0) spaceCooldown = "_";
   else spaceCooldown = Math.floor(spaceCooldown).toString();
   if (eCooldown == 0) eCooldown = "E";
   else eCooldown = Math.floor(eCooldown).toString();
-  let text = eCooldown + " " + spaceCooldown;
+  if (qCooldown == 0) qCooldown = "Q";
+  else qCooldown = Math.floor(qCooldown).toString();
+  let text = qCooldown + " " + eCooldown + " " + spaceCooldown;
   let X = text.length * 30;
   let Y = 20;
   const canvasX = canvas.width - X;
@@ -174,6 +176,27 @@ function renderResourceBar(me) {
   const canvasX = canvas.width / 2;
   const canvasY = canvas.height / 2;
   let radius = me.radius;
+  if (me.mana || me.charge) {
+    // Draw mana bar
+    context.fillStyle = 'pink';
+    context.fillRect(
+      canvasX - radius,
+      canvasY + radius + 12,
+      radius * 2 * me.mana,
+      2,
+    );
+    let start = 0;
+    let inc = radius * 2 / 5;
+    for (let i = 0; i < me.charge - 1; i++ ) {
+      console.log(me.charge);
+      context.fillRect(
+        canvasX - radius + inc * i,
+        canvasY + radius + 4,
+        radius * 2 / 5 - 1,
+        2,
+      );
+    }
+  }
   if (me.rage) {
     // Draw rage bar
     context.fillStyle = 'orange';

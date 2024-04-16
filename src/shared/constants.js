@@ -65,6 +65,13 @@ module.exports = Object.freeze({
   },
   QUANTITIES: {
     WARRIOR_SHIELDS: 3,
+    MANA: 51,
+    HEALING_RING: 100,
+    AURA_HR: 25,
+  },
+  COST_TYPES: {
+    ENERGY_BALL: 5,
+    MAGIC_WALL: 10,
   },
   // the max healths for players or structures
   MAX_HEALTH_TYPES: {
@@ -82,6 +89,8 @@ module.exports = Object.freeze({
   REGEN_TYPES: {
     PLAYER: 10,
     MAGE: 10,
+    AURA: 25,
+    MANA: 6,
     ROGUE: 10,
     WARRIOR: 10,
     BRUTE: 10,
@@ -101,6 +110,7 @@ module.exports = Object.freeze({
     ENERGY_BALL: 0.2,
     HEALING_RING: 10.0,
     MAGIC_WALL: 6.0,
+    CHANNEL: 2.0,
     //Rogue
     KNIFE_THROW: 0.5,
     INVISIBILITY: 5.0,
@@ -124,6 +134,9 @@ module.exports = Object.freeze({
     ENERGY_BALL: 4,
     HEALING_RING: 75,
     MAGIC_WALL: 20,
+    AURA_EB: 3,
+    AURA_HR: 10,
+    AURA_MW: 2,
     //Rogue
     ROGUE: 20,
     KNIFE_THROW: 8,
@@ -152,6 +165,9 @@ module.exports = Object.freeze({
     ENERGY_BALL: 7,
     HEALING_RING: 0,
     MAGIC_WALL: 25,
+    AURA_EB: 3,
+    AURA_HR: 0,
+    AURA_MW: 0,
     //Rogue
     ROGUE: 0,
     KNIFE_THROW: 15,
@@ -180,6 +196,7 @@ module.exports = Object.freeze({
     ENERGY_BALL: 0,
     HEALING_RING: 15,
     MAGIC_WALL: 0,
+    AURA_HR: 2,
     //Rogue
     ROGUE: 0,
     KNIFE_THROW: 0,
@@ -195,7 +212,7 @@ module.exports = Object.freeze({
     FIST_SMASH: 0,
     RAGING_FIST_SMASH: 0,
     GROUND_POUND: 0,
-    RAGE: 10,
+    RAGE: 15,
     //Structures
     STRUCTURE: 0,
   },
@@ -214,6 +231,7 @@ module.exports = Object.freeze({
     ENERGY_BALL: 600,
     HEALING_RING: 0,
     MAGIC_WALL: 400,
+    AURA: 25,
     //Rogue
     KNIFE_THROW: 800,
     INVISIBILITY: 500,
@@ -262,6 +280,7 @@ module.exports = Object.freeze({
     ENERGY_BALL: 2,
     HEALING_RING: null,
     MAGIC_WALL: null,
+    AURA_EB: 1,
     //Rogue
     KNIFE_THROW: 1,
     INVISIBILITY: null,
@@ -284,8 +303,10 @@ module.exports = Object.freeze({
     BULLET: null,
     //Mage
     ENERGY_BALL: null,
-    HEALING_RING: 150,
+    HEALING_RING: 100,
     MAGIC_WALL: 100,
+    AURA_HR: 20,
+    AURA_MW: 10,
     //Rogue
     KNIFE_THROW: null,
     INVISIBILITY: null,

@@ -171,6 +171,7 @@ class Player extends Object.Object {
       maxhp: this.maxhp,
       spaceCooldown: this.spaceCooldown,
       eCooldown: this.eCooldown,
+      qCooldown: this.qCooldown,
     };
   }
 }
@@ -187,42 +188,171 @@ class Mage extends Player {
     this.radius = Constants.RADIUS_TYPES.MAGE;
     this.damage = Constants.DAMAGE_TYPES.MAGE;
     this.mass = Constants.MASS_TYPES.MAGE;
+    this.mana = Constants.QUANTITIES.MANA;
+    this.channeling = false;
+    this.charge = 0;
+    this.prevChannel = false;
+    this.aura = false;
+    this.chargedPrimary = 0;
   }
   primaryFire(projectiles, structures) {
-    this.primaryFireCooldown = Constants.COOLDOWN_TYPES.ENERGY_BALL;
-    projectiles.push(new Projectiles.EnergyBall(this.id, this.x, this.y, this.direction, this.team));
+      this.chargedPrimary = Math.max(this.charge, this.chargedPrimary);
+      this.primaryFireCooldown = Constants.COOLDOWN_TYPES.ENERGY_BALL;
+      projectiles.push(new Projectiles.EnergyBall(this.id, this.x, this.y, this.direction, this.team, Math.ceil(this.chargedPrimary)));  
   }
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.MAGIC_WALL;
-    let inc = Math.PI / 12;
-    let width = 50;
-    let height = 25;
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction        , this.team, width, height, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc    , this.team, width, height, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction+inc+inc, this.team, width, height, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc    , this.team, width, height, this.mouseX, this.mouseY));
-    structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction-inc-inc, this.team, width, height, this.mouseX, this.mouseY));
+    let c = Math.floor(this.charge);
+    let width = 50 + 5 * c;
+    let height = 10 + 2.5 * c;
+    let num_walls = 3 + c;
+    let inc = Math.PI / 9;
+    let startArc = -inc * (num_walls - 1) / 2;
+    for (let i = 0; i < num_walls; i++ ) {
+      structures.push(new Structures.MagicWall(this.id, this.x, this.y, this.direction + startArc, this.team, width, height, this.mouseX, this.mouseY));
+      startArc += inc;
+    }
   }
   qFire(projectiles, structures) {
-    this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
-  }
-  spaceFire(projectiles, structures) {
-    this.spaceCooldown = Constants.COOLDOWN_TYPES.HEALING_RING;
-    let oppTeam;
-    if (this.team == 0) oppTeam = 1;
-    else oppTeam = 0;
-    let x = new Projectiles.HealingRing(this.id, this.x, this.y, this.direction, this.team, this.mouseX, this.mouseY);
+    this.qCooldown = Constants.COOLDOWN_TYPES.HEALING_RING;
+    let x = new Projectiles.HealingRing(this.id, this.x, this.y, this.direction, this.team, this.mouseX, this.mouseY, this.charge);
     projectiles.push(x);
   }
+  spaceFire(projectiles, structures) {
+    this.toggleAura();
+  }
+  channel(dt) {
+    let cost = dt * 10;
+    if (this.mana - cost < 0) {
+      return;
+    } else {
+      this.mana -= cost;
+      this.charge += dt;
+    }
+  }
+  stopChannel() {
+    this.spaceCooldown = Math.max(this.charge, Constants.COOLDOWN_TYPES.CHANNEL);
+    this.prevChannel = false;
+    this.channeling = false;
+  }
+  toggleAura() {
+    this.aura = !this.aura;
+    if (this.aura) {
+      this.speed = Constants.SPEED_TYPES.MAGE + Constants.SPEED_TYPES.AURA * Math.floor(this.charge);
+    } else {
+      this.speed = Constants.SPEED_TYPES.MAGE;
+    }
+  }
   regen(dt) {
+    if (!this.channeling) this.mana += Constants.REGEN_TYPES.MANA * dt;
+    if (this.mana > Constants.QUANTITIES.MANA) this.mana = Constants.QUANTITIES.MANA;
+    if (this.mana < 0) this.mana = 0;
+    if (this.regenCooldown <= 0) {
+      this.hp += Constants.REGEN_TYPES.MAGE * dt;
+    }
+    if (this.aura) {
+      this.hp += Constants.REGEN_TYPES.AURA * dt;
+    }
     if (this.hp >= Constants.MAX_HEALTH_TYPES.MAGE) {
       this.hp = Constants.MAX_HEALTH_TYPES.MAGE;
       return;
     }
-    if (this.regenCooldown <= 0) {
-      this.hp += Constants.REGEN_TYPES.MAGE * dt;
+  }
+  update(dt) {
+    this.move(dt);
+    // Update score
+    this.score += dt * Constants.SCORE_PER_SECOND;
+
+    // Make sure the player stays in bounds
+    this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
+    this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
+
+    // Fire a projectile(s), if needed
+    let projectiles = [];
+    let structures = [];
+    if (this.primaryFireCooldown > 0)
+      this.primaryFireCooldown -= dt;
+    if (this.primaryFireCooldown < 0)
+      this.primaryFireCooldown = 0;
+    if (this.eCooldown > 0) 
+      this.eCooldown -= dt;
+    if (this.eCooldown < 0)
+      this.eCooldown = 0;
+    if (this.qCooldown > 0) 
+      this.qCooldown -= dt;
+    if (this.qCooldown < 0)
+      this.qCooldown = 0;
+    if (this.spaceCooldown > 0)
+      this.spaceCooldown -= dt;
+    if (this.spaceCooldown < 0)
+      this.spaceCooldown = 0;
+    if (this.regenCooldown > 0)
+      this.regenCooldown -= dt;
+    if (this.regenCooldown < 0)
+      this.regenCooldown = 0;
+    
+    // Handle channeling
+    if (this.spaceCooldown <= 0 && this.prevChannel == false && this.spaceFiring) {
+      this.prevChannel = true;
+      this.channeling = true;
+    } else if (this.prevChannel == true && this.spaceFiring == true) {
+      this.channel(dt);
     }
+    // Primary fire
+    if (this.primaryFireCooldown <= 0 && this.primary_firing) {
+      this.primaryFire(projectiles, structures);
+      // Charging, has charge, primarycharge/no charge
+      if (this.charging) {
+        this.charge = 0;
+        this.stopChannel();
+      } else if (this.charge) {
+        this.charge = 0;
+      }
+    }
+    // Magic wall
+    if (this.eCooldown <= 0 && this.eFiring) {
+      this.eFire(projectiles, structures);
+      if (this.charging) {
+        this.stopChannel();
+        this.charge = 0;
+      } else if (this.charge) {
+        this.charge = 0;
+      }
+    }
+    // Healing Ring
+    if (this.qCooldown <= 0 && this.qFiring) {
+      this.qFire(projectiles, structures);
+      if (this.charging) {
+        this.stopChannel();
+        this.charge = 0;
+      } else if (this.charge) {
+        this.charge = 0;
+      }
+    }
+    if (this.chargedPrimary > 0) {
+      this.chargedPrimary -= dt;
+    } else if (this.chargedPrimary <= 0) {
+      this.chargedPrimary = 0;
+    }
+    if (this.aura && this.charge > 0) {
+      this.charge -= dt;
+    } else if (this.aura && this.charge <= 0) {
+      this.toggleAura();
+      this.charge = 0;
+    }
+    if (this.prevChannel == true && this.spaceFiring == false) {
+      this.spaceFire(projectiles, structures);
+      this.stopChannel();
+    }
+    this.regen(dt);
+    return [projectiles, structures];
+  }
+  serializeForUpdate() {
+    return {
+      ...(super.serializeForUpdate()),
+      mana: this.mana / Constants.QUANTITIES.MANA,
+      charge: this.charge
+    };
   }
 }
 

@@ -107,7 +107,7 @@ class ContinuousProjectile extends Projectile {
   }
   // Returns true if the projectile should be destroyed
   update(dt) {
-    if (this.health <= 0) return true;
+    if (this.resourcePool <= 0) return true;
     return super.update(dt);
   }
   collide(dt, entity) {
@@ -185,15 +185,15 @@ class ContinuousProjectileRect extends ProjectileRect {
 }
 
 class EnergyBall extends DiscreteProjectile {
-  constructor(parentID, x, y, dir, team) {
+  constructor(parentID, x, y, dir, team, charge) {
     super(parentID, x, y, dir, team);
     this.speed = Constants.SPEED_TYPES.ENERGY_BALL;
     this.lifespan = Constants.PROJ_LIFESPAN.ENERGY_BALL;
-    this.radius = Constants.RADIUS_TYPES.ENERGY_BALL;
-    this.damage = Constants.DAMAGE_TYPES.ENERGY_BALL;
+    this.radius = Constants.RADIUS_TYPES.ENERGY_BALL + Constants.RADIUS_TYPES.AURA_EB * charge;
+    this.damage = Constants.DAMAGE_TYPES.ENERGY_BALL + Constants.DAMAGE_TYPES.AURA_EB * charge;
     this.classType = Constants.CLASS_TYPES.ENERGY_BALL;
-    this.numHits = Constants.PROJ_NUM_HITS.ENERGY_BALL;
-    this.pierce = Constants.PROJ_PIERCE.ENERGY_BALL;
+    this.numHits = Constants.PROJ_NUM_HITS.ENERGY_BALL + charge;
+    this.pierce = Constants.PROJ_PIERCE.ENERGY_BALL + charge;
   }
   // Returns true if the projectile should be destroyed
   update(dt) {
@@ -202,7 +202,7 @@ class EnergyBall extends DiscreteProjectile {
 }
 
 class HealingRing extends ContinuousProjectile {
-  constructor(parentID, x, y, dir, team, finX, finY) {
+  constructor(parentID, x, y, dir, team, finX, finY, charge) {
     super(parentID, finX, finY, dir, team);
     this.speed = Constants.SPEED_TYPES.HEALING_RING;
     this.startX = x;
@@ -210,15 +210,19 @@ class HealingRing extends ContinuousProjectile {
     this.distance = this.distanceTo2(finX, finY);
     this.lifespan = Constants.PROJ_LIFESPAN.HEALING_RING;
     this.hp = Constants.MAX_HEALTH_TYPES.MAGE;
-    this.radius = Constants.RADIUS_TYPES.HEALING_RING;
+    this.radius = Constants.RADIUS_TYPES.HEALING_RING  + (Constants.RADIUS_TYPES.AURA_HR * charge);
+    this.maxradius = this.radius;
     this.damage = Constants.DAMAGE_TYPES.HEALING_RING;
     this.classType = Constants.CLASS_TYPES.HEALING_RING;
-    this.healing = Constants.HEALING_TYPES.HEALING_RING;
+    this.healing = Constants.HEALING_TYPES.HEALING_RING  + (Constants.HEALING_TYPES.AURA_HR * charge);
     this.selfheal = true;
     this.pierce = Constants.PROJ_PIERCE.HEALING_RING;
+    this.resourcePool = Constants.QUANTITIES.HEALING_RING + Constants.QUANTITIES.AURA_HR * charge;
+    this.maxResourcePool = this.resourcePool;
   }
   // Returns true if the projectile should be destroyed
   update(dt) {
+    this.radius = (this.maxradius / 2) + (this.maxradius / 2 * this.resourcePool / this.maxResourcePool);
     return super.update(dt);
   }
 }
