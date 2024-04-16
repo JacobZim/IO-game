@@ -244,6 +244,39 @@ class KnifeThrow extends DiscreteProjectile {
     return super.update(dt);
   }
 }
+class RogueSwipe extends DiscreteProjectileRect {
+  constructor(parentID, x, y, dir, team, w, h, parent, invis) {
+    super(parentID, x, y, dir, team, w, h);
+    this.parent = parent;
+    this.classType = Constants.CLASS_TYPES.ROGUE_SWIPE;
+    this.lifespan = Constants.PROJ_LIFESPAN.ROGUE_SWIPE; // this determines how fast the sword swipes across its arc
+    this.swipeupdate();
+    this.pierce = Constants.PROJ_PIERCE.ROGUE_SWIPE;
+    this.numHits = Constants.PROJ_NUM_HITS.ROGUE_SWIPE;
+    this.damage = Constants.DAMAGE_TYPES.ROGUE_SWIPE;
+    if (invis) {
+      this.pierce *= 3;
+      this.numHits += 2;
+      this.damage *= 2;
+    }
+  }
+  swipeupdate() {
+    let x = this.parent.x;
+    let y = this.parent.y;
+    let totalArc = Math.PI / 3;
+    let startArc = this.parent.direction - (totalArc / 2);
+    let currentArc = totalArc * (this.currenttime / this.lifespan);
+    var direction = startArc + currentArc - (Math.PI / 2); // Not sure why a constant PI/2 needs to be subtracted but it does
+    let dist = 40;
+    this.x = x + Math.cos(direction) * dist;
+    this.y = y + Math.sin(direction) * dist;
+    this.direction = direction + Math.PI / 2;
+  }
+  update(dt) {
+    this.swipeupdate();
+    return super.update(dt);
+  }
+}
 
 class WarriorSwipe extends DiscreteProjectileRect {
   constructor(parentID, x, y, dir, team, w, h, parent, cutdir) {
@@ -255,6 +288,7 @@ class WarriorSwipe extends DiscreteProjectileRect {
     this.swipeupdate();
     this.pierce = Constants.PROJ_PIERCE.SWORD_SWIPE;
     this.numHits = Constants.PROJ_NUM_HITS.SWORD_SWIPE;
+    this.damage = Constants.DAMAGE_TYPES.SWORD_SWIPE;
   }
   swipeupdate() {
     let x = this.parent.x;
@@ -331,10 +365,10 @@ module.exports.Projectile = Projectile;
 module.exports.DiscreteProjectile = DiscreteProjectile;
 module.exports.ContinuousProjectile = ContinuousProjectile;
 module.exports.EnergyBall = EnergyBall;
-//module.exports.MagicWall = MagicWall;
 module.exports.HealingRing = HealingRing;
 
 module.exports.KnifeThrow = KnifeThrow;
+module.exports.RogueSwipe = RogueSwipe;
 module.exports.WarriorSwipe = WarriorSwipe;
 module.exports.BruteSwipe = BruteSwipe;
 module.exports.RagingBruteSwipe = RagingBruteSwipe;

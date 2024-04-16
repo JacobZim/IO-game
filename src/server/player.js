@@ -375,11 +375,11 @@ class Rogue extends Player {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.KNIFE_THROW;
     if (this.invisible) {
       let inc = Math.PI / 24;
-      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction - inc - inc, this.team, 0));
+      // projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction - inc - inc, this.team, 0));
       projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction - inc, this.team, 0));
       projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction, this.team, 0));
       projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction + inc, this.team, 0));
-      projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction + inc + inc, this.team, 0));
+      // projectiles.push(new Projectiles.KnifeThrow(this.id, this.x, this.y, this.direction + inc + inc, this.team, 0));
       this.invisible = Constants.INVISIBILITY.NONE;
     }
     else {
@@ -391,8 +391,15 @@ class Rogue extends Player {
     this.invisible = Constants.INVISIBILITY.INIT;
   }
   qFire(projectiles, structures) {
-    this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    this.qCooldown = Constants.COOLDOWN_TYPES.ROGUE_SWIPE;
+    let width = 4;
+    let height = 35;
+    let i = false;
+    if (this.invisible) {
+      i = true;
+      this.invisible -= 0.2;
+    }
+    projectiles.push(new Projectiles.RogueSwipe(this.id, this.x, this.y, this.direction, this.team, width, height, this, i));
   }
   spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.DASH;
@@ -481,7 +488,7 @@ class Warrior extends Player {
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.SWORD_SWIPE;
-    let width = 10;
+    let width = 6;
     let height = 40;
     projectiles.push(new Projectiles.WarriorSwipe(this.id, this.x, this.y, this.direction, this.team, width, height, this, this.cutdir));
     if (this.cutdir) this.cutdir = 0;

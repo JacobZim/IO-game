@@ -49,6 +49,7 @@ module.exports = Object.freeze({
     KNIFE_THROW: 20,
     INVISIBILITY: 21,
     DASH: 22,
+    ROGUE_SWIPE:32,
     //Warrior
     SWORD_SWIPE: 23,
     SHIELD_BASH: 24,
@@ -112,9 +113,10 @@ module.exports = Object.freeze({
     MAGIC_WALL: 6.0,
     CHANNEL: 2.0,
     //Rogue
-    KNIFE_THROW: 0.5,
-    INVISIBILITY: 5.0,
+    KNIFE_THROW: 0.6,
+    INVISIBILITY: 8.5,
     DASH: 3.0,
+    ROGUE_SWIPE: 8.0,
     //Warrior
     SWORD_SWIPE: 0.5,
     SHIELD_BASH: 8.0,
@@ -142,6 +144,7 @@ module.exports = Object.freeze({
     KNIFE_THROW: 8,
     INVISIBILITY: 20,
     DASH: 4,
+    ROGUE_SWIPE: 20,
     //Warrior
     WARRIOR: 25,
     SWORD_SWIPE: 30,
@@ -170,12 +173,13 @@ module.exports = Object.freeze({
     AURA_MW: 0,
     //Rogue
     ROGUE: 0,
-    KNIFE_THROW: 15,
+    KNIFE_THROW: 18,
     INVISIBILITY: 50,
     DASH: 30,
+    ROGUE_SWIPE: 45,
     //Warrior
     WARRIOR: 0,
-    SWORD_SWIPE: 22,
+    SWORD_SWIPE: 28,
     SHIELD_BASH: 100,
     SHIELD: 0,
     //Brute
@@ -202,6 +206,7 @@ module.exports = Object.freeze({
     KNIFE_THROW: 0,
     INVISIBILITY: 0,
     DASH: 0,
+    ROGUE_SWIPE: 0,
     //Warrior
     WARRIOR: 0,
     SWORD_SWIPE: 0,
@@ -236,6 +241,7 @@ module.exports = Object.freeze({
     KNIFE_THROW: 800,
     INVISIBILITY: 500,
     DASH: 1200,
+    ROGUE_SWIPE: 0,
     //Warrior
     SWORD_SWIPE: 0,
     SHIELD_BASH: 900,
@@ -260,6 +266,7 @@ module.exports = Object.freeze({
     KNIFE_THROW: 0.6,
     INVISIBILITY: 0.8,
     DASH: 0.3,
+    ROGUE_SWIPE: 0.25,
     //Warrior
     SWORD_SWIPE: 0.3,
     SHIELD_BASH: 0.4,
@@ -285,6 +292,7 @@ module.exports = Object.freeze({
     KNIFE_THROW: 1,
     INVISIBILITY: null,
     DASH: null,
+    ROGUE_SWIPE: 1,
     //Warrior
     SWORD_SWIPE: 2,
     SHIELD_BASH: 1,
@@ -337,6 +345,7 @@ module.exports = Object.freeze({
     KNIFE_THROW: 1,
     INVISIBILITY: null,
     DASH: 5,
+    ROGUE_SWIPE: 1,
     //Warrior
     SWORD_SWIPE: 3,
     SHIELD_BASH: 1,
