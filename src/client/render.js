@@ -188,7 +188,6 @@ function renderResourceBar(me) {
     let start = 0;
     let inc = radius * 2 / 5;
     for (let i = 0; i < me.charge - 1; i++ ) {
-      console.log(me.charge);
       context.fillRect(
         canvasX - radius + inc * i,
         canvasY + radius + 4,
