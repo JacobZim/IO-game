@@ -36,11 +36,16 @@ class Player extends Object.Object {
     this.moveU = false;
     this.moveD = false;
     this.overrideMovement = false;
+    this.slow = 0;
   }
 
   // Returns a newly created projectile, or null.
   update(dt) {
     this.move(dt);
+    if (this.slow > 0)
+      this.slow -= dt;
+    if (this.slow < 0)
+      this.slow = 0;
     // Update score
     this.score += dt * Constants.SCORE_PER_SECOND;
 
@@ -122,28 +127,33 @@ class Player extends Object.Object {
     const diag = Math.sqrt(2) / 2;
     this.dx = 0;
     this.dy = 0;
+
+    let speed = this.speed;
+    if (this.slow > 0) {
+      speed *= 1 / 2;
+    }
     
     // Calculate new X and Y positions based on keys pressed
     if (this.moveR && this.moveU) {
-      this.dx = diag * this.speed;
-      this.dy = diag * this.speed;
+      this.dx = diag * speed;
+      this.dy = diag * speed;
     }
     else if (this.moveR && this.moveD) {
-      this.dx = diag * this.speed;
-      this.dy = diag * this.speed * (-1);
+      this.dx = diag * speed;
+      this.dy = diag * speed * (-1);
     }
     else if (this.moveL && this.moveU) {
-      this.dx = diag * this.speed * (-1);
-      this.dy = diag * this.speed;
+      this.dx = diag * speed * (-1);
+      this.dy = diag * speed;
     }
     else if (this.moveL && this.moveD) {
-      this.dx = diag * this.speed * (-1);
-      this.dy = diag * this.speed * (-1);
+      this.dx = diag * speed * (-1);
+      this.dy = diag * speed * (-1);
     }
-    else if (this.moveR) this.dx = this.speed;
-    else if (this.moveL) this.dx = this.speed * (-1);
-    else if (this.moveU) this.dy = this.speed;
-    else if (this.moveD) this.dy = this.speed * (-1);
+    else if (this.moveR) this.dx = speed;
+    else if (this.moveL) this.dx = speed * (-1);
+    else if (this.moveU) this.dy = speed;
+    else if (this.moveD) this.dy = speed * (-1);
 
     // Check if the new X and Y positions collide with anything
 
@@ -260,6 +270,10 @@ class Mage extends Player {
   }
   update(dt) {
     this.move(dt);
+    if (this.slow > 0)
+      this.slow -= dt;
+    if (this.slow < 0)
+      this.slow = 0;
     // Update score
     this.score += dt * Constants.SCORE_PER_SECOND;
 
@@ -392,7 +406,7 @@ class Rogue extends Player {
   }
   qFire(projectiles, structures) {
     this.qCooldown = Constants.COOLDOWN_TYPES.ROGUE_SWIPE;
-    let width = 4;
+    let width = 6;
     let height = 35;
     let i = false;
     if (this.invisible) {
@@ -481,10 +495,8 @@ class Warrior extends Player {
     }
     this.shieldsActive = false;
     this.cutdir = 1; // binary operator that switches direction of cut every time
-    // this.swords = [];
-    // for(let i = 0; i < Constants.QUANTITIES.WARRIOR_SWORDS; i++) {
-    //   this.swords.push(new Projectiles.WarriorSwipe(this.id, this.x, this.y, this.direction, this.team, width, height, this));
-    // }
+    this.speared = null;
+    this.spearedTimer = 0;
   }
   primaryFire(projectiles, structures) {
     this.primaryFireCooldown = Constants.COOLDOWN_TYPES.SWORD_SWIPE;
@@ -511,8 +523,10 @@ class Warrior extends Player {
     this.direction = this.bashDirection;
   }
   qFire(projectiles, structures) {
-    this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    this.qCooldown = Constants.COOLDOWN_TYPES.SPEAR_THROW;
+    let w = 8;
+    let h = 50;
+    projectiles.push(new Projectiles.SpearThrow(this.id, this.x, this.y, this.direction, this.team, w, h, this));
   }
   spaceFire(projectiles, structures) {
     this.spaceCooldown = Constants.COOLDOWN_TYPES.SHIELD;
@@ -578,6 +592,10 @@ class Warrior extends Player {
     }
     // Parents update copy pasted here
     this.move(dt);
+    if (this.slow > 0)
+      this.slow -= dt;
+    if (this.slow < 0)
+      this.slow = 0;
     // So that the shields update based on the new position of Warrior
     let inc = Math.PI / 4;
     let startArc = -inc * (this.shields.length - 1) / 2;

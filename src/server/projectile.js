@@ -263,7 +263,7 @@ class RogueSwipe extends DiscreteProjectileRect {
   swipeupdate() {
     let x = this.parent.x;
     let y = this.parent.y;
-    let totalArc = Math.PI / 3;
+    let totalArc = Math.PI;
     let startArc = this.parent.direction - (totalArc / 2);
     let currentArc = totalArc * (this.currenttime / this.lifespan);
     var direction = startArc + currentArc - (Math.PI / 2); // Not sure why a constant PI/2 needs to be subtracted but it does
@@ -311,6 +311,27 @@ class WarriorSwipe extends DiscreteProjectileRect {
   update(dt) {
     this.swipeupdate();
     return super.update(dt);
+  }
+}
+class SpearThrow extends DiscreteProjectileRect {
+  constructor(parentID, x, y, dir, team, w, h, parent) {
+    super(parentID, x, y, dir, team, w, h);
+    this.parent = parent;
+    this.speed = Constants.SPEED_TYPES.SPEAR_THROW;
+    this.lifespan = Constants.PROJ_LIFESPAN.SPEAR_THROW;
+    this.classType = Constants.CLASS_TYPES.SPEAR_THROW;
+    this.pierce = Constants.PROJ_PIERCE.SPEAR_THROW;
+    this.damage = Constants.DAMAGE_TYPES.SPEAR_THROW;
+  }
+  // Returns true if the projectile should be destroyed
+  update(dt) {
+    return super.update(dt);
+  }
+  collide(dt, entity) {
+    if (entity.team != this.team) {
+      entity.slow = 2.0;
+    }
+    return super.collide(dt, entity);
   }
 }
 class BruteSwipe extends DiscreteProjectile {
@@ -364,11 +385,15 @@ class RagingBruteSwipe extends BruteSwipe {
 module.exports.Projectile = Projectile;
 module.exports.DiscreteProjectile = DiscreteProjectile;
 module.exports.ContinuousProjectile = ContinuousProjectile;
+
 module.exports.EnergyBall = EnergyBall;
 module.exports.HealingRing = HealingRing;
 
 module.exports.KnifeThrow = KnifeThrow;
 module.exports.RogueSwipe = RogueSwipe;
+
 module.exports.WarriorSwipe = WarriorSwipe;
+module.exports.SpearThrow = SpearThrow;
+
 module.exports.BruteSwipe = BruteSwipe;
 module.exports.RagingBruteSwipe = RagingBruteSwipe;

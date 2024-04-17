@@ -54,6 +54,7 @@ module.exports = Object.freeze({
     SWORD_SWIPE: 23,
     SHIELD_BASH: 24,
     SHIELD: 25,
+    SPEAR_THROW: 33,
     //Brute
     FIST_SMASH: 26,
     RAGING_FIST_SMASH: 31,
@@ -121,6 +122,7 @@ module.exports = Object.freeze({
     SWORD_SWIPE: 0.5,
     SHIELD_BASH: 8.0,
     SHIELD: 1.5,
+    SPEAR_THROW: 8.0,
     //Brute
     FIST_SMASH: .6,
     RAGING_FIST_SMASH: .5,
@@ -182,6 +184,7 @@ module.exports = Object.freeze({
     SWORD_SWIPE: 28,
     SHIELD_BASH: 100,
     SHIELD: 0,
+    SPEAR_THROW: 30,
     //Brute
     BRUTE: 0,
     FIST_SMASH: 30,
@@ -212,6 +215,7 @@ module.exports = Object.freeze({
     SWORD_SWIPE: 0,
     SHIELD_BASH: 0,
     SHIELD: 0,
+    SPEAR_THROW: 0,
     //Brute
     BRUTE: 0,
     FIST_SMASH: 0,
@@ -246,6 +250,7 @@ module.exports = Object.freeze({
     SWORD_SWIPE: 0,
     SHIELD_BASH: 900,
     SHIELD: 0,
+    SPEAR_THROW: 1000,
     //Brute
     FIST_SMASH: 400,
     RAGING_FIST_SMASH: 425,
@@ -266,11 +271,12 @@ module.exports = Object.freeze({
     KNIFE_THROW: 0.6,
     INVISIBILITY: 0.8,
     DASH: 0.3,
-    ROGUE_SWIPE: 0.25,
+    ROGUE_SWIPE: 0.3,
     //Warrior
     SWORD_SWIPE: 0.3,
     SHIELD_BASH: 0.4,
     SHIELD: 100.0,
+    SPEAR_THROW: 0.5,
     //Brute
     FIST_SMASH: 0.4,
     RAGING_FIST_SMASH: 0.35,
@@ -297,6 +303,7 @@ module.exports = Object.freeze({
     SWORD_SWIPE: 2,
     SHIELD_BASH: 1,
     SHIELD: null,
+    SPEAR_THROW: 1,
     //Brute
     FIST_SMASH: 3,
     RAGING_FIST_SMASH: 4,
@@ -350,6 +357,7 @@ module.exports = Object.freeze({
     SWORD_SWIPE: 3,
     SHIELD_BASH: 1,
     SHIELD: null,
+    SPEAR_THROW: 1,
     //Brute
     FIST_SMASH: 1,
     RAGING_FIST_SMASH: 3,
