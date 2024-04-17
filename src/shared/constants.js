@@ -70,6 +70,7 @@ module.exports = Object.freeze({
     MANA: 51,
     HEALING_RING: 100,
     AURA_HR: 25,
+    GROUND_POUND: 50,
   },
   COST_TYPES: {
     ENERGY_BALL: 5,
@@ -128,6 +129,7 @@ module.exports = Object.freeze({
     RAGING_FIST_SMASH: .5,
     GROUND_POUND: 8.0,
     RAGE: 2.0,
+    SANDWHICH: 10.0
   },
   // determines how big an object is
   RADIUS_TYPES: {
@@ -156,7 +158,7 @@ module.exports = Object.freeze({
     BRUTE: 30,
     FIST_SMASH: 30,
     RAGING_FIST_SMASH: 30,
-    GROUND_POUND: 50,
+    GROUND_POUND: 200,
     RAGE: 35,
     //Structures
     STRUCTURE: 25,
@@ -222,6 +224,7 @@ module.exports = Object.freeze({
     RAGING_FIST_SMASH: 0,
     GROUND_POUND: 0,
     RAGE: 15,
+    SANDWHICH: .5,
     //Structures
     STRUCTURE: 0,
   },
@@ -234,7 +237,7 @@ module.exports = Object.freeze({
     MAGE: 200,
     ROGUE: 200,
     WARRIOR: 200,
-    BRUTE: 200,
+    BRUTE: 175,
     BULLET: 800,
     //Mage
     ENERGY_BALL: 600,
@@ -254,7 +257,8 @@ module.exports = Object.freeze({
     //Brute
     FIST_SMASH: 400,
     RAGING_FIST_SMASH: 425,
-    GROUND_POUND: 400,
+    GROUND_POUND: 0,
+    GROUND_POUND_PULL: 150,
     RAGE: 250, // this determines how fast you move during rage
     //Structures
     STRUCTURE: 400,
@@ -280,7 +284,7 @@ module.exports = Object.freeze({
     //Brute
     FIST_SMASH: 0.4,
     RAGING_FIST_SMASH: 0.35,
-    GROUND_POUND: 8.0,
+    GROUND_POUND: 1.5,
     RAGE: 6.0,
     //Structures 
     STRUCTURE: 8.0,
@@ -333,7 +337,7 @@ module.exports = Object.freeze({
     //Brute
     FIST_SMASH: 0.4,
     RAGING_FIST_SMASH: 0.4,
-    GROUND_POUND: 8.0,
+    GROUND_POUND: 50,
     RAGE: 8.0,
     //Structures 
     STRUCTURE: 8.0,

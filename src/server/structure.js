@@ -121,28 +121,28 @@ class Shield extends StructureRect {
     // }
 }
 
-class WarriorSwipe extends Structure {
-  constructor(parentID, x, y, dir, team) {
-      super(parentID, x, y, dir, team);
-      this.startX = x;
-      this.startY = y;
-      this.lifespan = Constants.PROJ_LIFESPAN.SWORD_SWIPE;
-      this.hp = Constants.MAX_HEALTH_TYPES.SWORD_SWIPE;
-      this.maxhp = Constants.MAX_HEALTH_TYPES.SWORD_SWIPE;
-      this.radius = Constants.RADIUS_TYPES.SWORD_SWIPE;
-      this.damage = Constants.DAMAGE_TYPES.SWORD_SWIPE;
-      this.classType = Constants.CLASS_TYPES.SWORD_SWIPE;
-      this.mass = Constants.MASS_TYPES.SWORD_SWIPE;
-      this.speed = 0;
-  }
-  // Returns true if the projectile should be destroyed
-  update(dt) {
-      if (super.update(dt)) return true;
-      return false;
-  }
-}
+// class WarriorSwipe extends Structure {
+//   constructor(parentID, x, y, dir, team) {
+//       super(parentID, x, y, dir, team);
+//       this.startX = x;
+//       this.startY = y;
+//       this.lifespan = Constants.PROJ_LIFESPAN.SWORD_SWIPE;
+//       this.hp = Constants.MAX_HEALTH_TYPES.SWORD_SWIPE;
+//       this.maxhp = Constants.MAX_HEALTH_TYPES.SWORD_SWIPE;
+//       this.radius = Constants.RADIUS_TYPES.SWORD_SWIPE;
+//       this.damage = Constants.DAMAGE_TYPES.SWORD_SWIPE;
+//       this.classType = Constants.CLASS_TYPES.SWORD_SWIPE;
+//       this.mass = Constants.MASS_TYPES.SWORD_SWIPE;
+//       this.speed = 0;
+//   }
+//   // Returns true if the projectile should be destroyed
+//   update(dt) {
+//       if (super.update(dt)) return true;
+//       return false;
+//   }
+// }
 
   module.exports.Structure = Structure;
   module.exports.MagicWall = MagicWall;
   module.exports.Shield = Shield;
-  module.exports.WarriorSwipe = WarriorSwipe;
+  // module.exports.WarriorSwipe = WarriorSwipe;

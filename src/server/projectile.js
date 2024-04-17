@@ -382,6 +382,37 @@ class RagingBruteSwipe extends BruteSwipe {
   }
 }
 
+class GroundPound extends ContinuousProjectile {
+  constructor(parentID, x, y, dir, team, raging) {
+    super(parentID, x, y, dir, team);
+    this.speed = Constants.SPEED_TYPES.GROUND_POUND;
+    this.lifespan = Constants.PROJ_LIFESPAN.GROUND_POUND;
+    this.radius = Constants.RADIUS_TYPES.GROUND_POUND;
+    this.damage = Constants.DAMAGE_TYPES.GROUND_POUND;
+    this.classType = Constants.CLASS_TYPES.GROUND_POUND;
+    this.pierce = Constants.PROJ_PIERCE.GROUND_POUND;
+    this.resourcePool = Constants.QUANTITIES.GROUND_POUND;
+    this.maxResourcePool = this.resourcePool;
+  }
+  // Returns true if the projectile should be destroyed
+  update(dt) {
+    return super.update(dt);
+  }
+  collide(dt, entity) {
+    let x1 = this.x;
+    let y1 = this.y;
+    let x2 = entity.x;
+    let y2 = entity.y;
+    let direction = Math.atan2(y2 - y1, x2 - x1) - Math.PI / 2;
+    let speed = Constants.SPEED_TYPES.GROUND_POUND_PULL;
+    // console.log(x1,y1,x2,y2,direction,speed);
+    entity.x += dt * speed * Math.sin(direction);
+    entity.y -= dt * speed * Math.cos(direction);
+    // console.log(entity);
+    return super.collide(dt, entity);
+  }
+}
+
 module.exports.Projectile = Projectile;
 module.exports.DiscreteProjectile = DiscreteProjectile;
 module.exports.ContinuousProjectile = ContinuousProjectile;
@@ -397,3 +428,4 @@ module.exports.SpearThrow = SpearThrow;
 
 module.exports.BruteSwipe = BruteSwipe;
 module.exports.RagingBruteSwipe = RagingBruteSwipe;
+module.exports.GroundPound = GroundPound;

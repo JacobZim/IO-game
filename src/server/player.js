@@ -690,12 +690,13 @@ class Brute extends Player {
   }
   eFire(projectiles, structures) {
     this.eCooldown = Constants.COOLDOWN_TYPES.GROUND_POUND;
-    let inc = Math.PI / 12;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    projectiles.push(new Projectiles.GroundPound(this.id, this.x, this.y, this.direction, this.team, this.raging));
   }
   qFire(projectiles, structures) {
-    this.qCooldown = Constants.COOLDOWN_TYPES.BULLET;
-    projectiles.push(new Projectiles.Projectile(this.id, this.x, this.y, this.direction, this.team));
+    this.qCooldown = Constants.COOLDOWN_TYPES.SANDWHICH;
+    let missing = this.maxhp - this.hp;
+    let heal = missing * Constants.HEALING_TYPES.SANDWHICH;
+    this.hp += heal;
   }
   spaceFire(projectiles, structures) {
     this.toggleRage();
