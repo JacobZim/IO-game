@@ -1,10 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg width="100mm" height="100mm" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
- <circle cx="50" cy="50" r="50" fill="#f00" stroke-width="0"/>
- <g>
-  <ellipse transform="matrix(.97894 -.20413 .21419 .97679 0 0)" cx="30.977" cy="21.83" rx="10.163" ry="4.656" stroke="#fff" stroke-width="0"/>
-  <ellipse transform="matrix(-.97894 -.20413 -.21419 .97679 0 0)" cx="-66.708" cy="1.4158" rx="10.163" ry="4.656" stroke="#fff" stroke-width="0"/>
-  <path d="m77.265 88.385-54.126-0.47752 27.334-71.091 13.396 35.784z" fill="none" stroke="#000" stroke-width="4.588"/>
- </g>
+
+<svg
+   width="100mm"
+   height="100mm"
+   version="1.1"
+   viewBox="0 0 100 100"
+   id="svg20849"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs20853" />
+  <circle
+     cx="50"
+     cy="50"
+     r="50"
+     fill="#00f"
+     stroke-width="0"
+     id="circle20839"
+     style="fill:#ff0000;fill-opacity:1" />
+  <g
+     fill="#fff"
+     id="g20847"
+     style="fill:#000000;stroke:#000000;stroke-opacity:1;fill-opacity:1">
+    <circle
+       style="fill:#000000;stroke:#000000;stroke-opacity:1;fill-opacity:1;stroke-width:3.39562;stroke-linejoin:round;stroke-dasharray:none"
+       id="path3237"
+       cx="50.000004"
+       cy="50.000004"
+       r="43.302193" />
+    <ellipse
+       style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="path3293"
+       cx="50.350677"
+       cy="16.620611"
+       rx="31.041437"
+       ry="12.098828" />
+    <ellipse
+       transform="matrix(.97894 -.20413 .21419 .97679 0 0)"
+       cx="30.977"
+       cy="21.83"
+       rx="10.163"
+       ry="4.656"
+       stroke-width="0"
+       id="ellipse20841"
+       style="fill:#000000;stroke:#000000;stroke-opacity:1;fill-opacity:1" />
+    <ellipse
+       transform="matrix(-.97894 -.20413 -.21419 .97679 0 0)"
+       cx="-66.708"
+       cy="1.4158"
+       rx="10.163"
+       ry="4.656"
+       stroke-width="0"
+       id="ellipse20843"
+       style="fill:#000000;stroke:#000000;stroke-opacity:1;fill-opacity:1" />
+  </g>
 </svg>
