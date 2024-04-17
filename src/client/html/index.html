@@ -20,56 +20,95 @@
 <body>
   <canvas id="game-canvas"></canvas>
   <div id="play-menu" class="hidden">
-    <div id="title">
-      <img src="/assets/mageBlue.svg" class="small-image">
-      <h1>Swords.io</h1>
-      <img src="/assets/mageRed.svg" class="small-image">
+    <div id="menu">
+      <div id="title">
+        <img src="/assets/mageBlue.svg" class="small-image">
+        <h1>Swords.io</h1>
+        <img src="/assets/mageRed.svg" class="small-image">
+      </div>
+      <p>
+        Choose a Class, Work Together and Fight Other Players.
+        <br />
+        WASD to Move, Left-click to Primary Fire, 
+        <br />
+        Q, E and Space for <button onclick="showAbilities()">Abilities</button>
+      </p>
+      <hr />
+      <p>Select your class</p>
+      <div style="display:flex; flex-direction:row; justify-content: space-around;">
+        <div style="margin: 0 5px 0 5px;">
+          <input type="radio" name="class-select" value="1" id="select-mage" onclick="showMage()">
+          <label for="select-mage">Mage</label>
+        </div>
+        <div style="margin: 0 5px 0 5px;">
+          <input type="radio" name="class-select" value="5" id="select-rogue" onclick="showRogue()">
+          <label for="select-rogue">Rogue</label>
+        </div>
+        <div style="margin: 0 5px 0 5px;">
+          <input type="radio" name="class-select" value="9" id="select-warrior" onclick="showWarrior()">
+          <label for="select-warrior">Warrior</label>
+        </div>
+        <div style="margin: 0 5px 0 5px;">
+          <input type="radio" name="class-select" value="13" id="select-brute" onclick="showBrute()">
+          <label for="select-brute">Brute</label>
+        </div>
+      </div>
+      <!--<select id="class-select">
+        <option value=0>Player</option>
+        <option value=1>Mage</option>
+        <option value=5>Rogue</option>
+        <option value=9>Warrior</option>
+        <option value=13>Brute</option>
+      </select>-->
+      <input type="text" id="username-input" placeholder="Username" /> <br>
+      <button id="play-button">PLAY</button>
+      <hr />
+      <p>
+        <!-- <br /> -->
+        <br />
+        Created by Jacob Zimmerman.
+      </p>
+      <hr />
+      </div>
+    <div id="abilities" class="hidden">
+      <div id="abilities-mage" class="">
+        <img src="/assets/mageBlue.svg" class="small-image">
+        <h1>Space</h1>
+        <p>Channel Mana to unleash powerful attacks. Release for a speed and healing boost</p>
+        <h1>E</h1>
+        <p>Create Magic Walls to block incoming enemies and projectiles</p>
+        <h1>Q</h1>
+        <p>Create a Healing Ring that heals yourself and allies inside of it</p>
+      </div>
+      <div id="abilities-rogue" class="hidden">
+        <img src="/assets/rogueRed.svg" class="small-image">
+        <h1>Space</h1>
+        <p>Dash a short distance, dealing moderate damage to anything you touch</p>
+        <h1>E</h1>
+        <p>Turn Invisible and unleash powerful attacks from out of sight</p>
+        <h1>Q</h1>
+        <p>Backstab enemies while Invisible for 20 to 40 percent of their health</p>
+      </div>
+      <div id="abilities-warrior" class="hidden">
+        <img src="/assets/warriorBlue.svg" class="medium-image">
+        <h1>Space</h1>
+        <p>Raise and lower your Shields, stopping enemy attacks and regenerating while lowered</p>
+        <h1>E</h1>
+        <p>Rush forward, dealing moderate damage with your Shields</p>
+        <h1>Q</h1>
+        <p>Throw a Spear that damages and slows enemies</p>
+      </div>
+      <div id="abilities-brute" class="hidden">
+        <img src="/assets/bruteRed.svg" class="large-image">
+        <h1>Space</h1>
+        <p>Enter a Rage, growing in size and gaining health regen, damage, damage resistance and increased speed</p>
+        <h1>E</h1>
+        <p>Pound the ground and damage and pull in nearby enemies</p>
+        <h1>Q</h1>
+        <p>Eat a Sandwich and regain half of your missing health</p>
+      </div>
+      <button onClick="hideAbilities()">Hide</button>
     </div>
-    <p>
-      Choose a Class, Work Together and Fight Other Players.
-      <br />
-      WASD to Move, Left-click to Primary Fire, 
-      <br />
-      E for Offensive Ability, Space for Defensive Ability
-    </p>
-    <hr />
-    <p>Select your class</p>
-    <div style="display:flex; flex-direction:row; justify-content: space-around;">
-      <div style="margin: 0 5px 0 5px;">
-        <input type="radio" name="class-select" value="1" id="select-mage">
-        <label for="select-mage">Mage</label>
-      </div>
-      <div style="margin: 0 5px 0 5px;">
-        <input type="radio" name="class-select" value="5" id="select-rogue">
-        <label for="select-rogue">Rogue</label>
-      </div>
-      <div style="margin: 0 5px 0 5px;">
-        <input type="radio" name="class-select" value="9" id="select-warrior">
-        <label for="select-warrior">Warrior</label>
-      </div>
-      <div style="margin: 0 5px 0 5px;">
-        <input type="radio" name="class-select" value="13" id="select-brute">
-        <label for="select-brute">Brute</label>
-      </div>
-    </div>
-    <!--<select id="class-select">
-      <option value=0>Player</option>
-      <option value=1>Mage</option>
-      <option value=5>Rogue</option>
-      <option value=9>Warrior</option>
-      <option value=13>Brute</option>
-    </select>-->
-    <input type="text" id="username-input" placeholder="Username" />
-    <button id="play-button">PLAY</button>
-    <hr />
-    <p>
-      <!-- <br /> -->
-      <br />
-      Created by Jacob Zimmerman.
-      <br />
-      SlimZimmStudios
-    </p>
-    <hr />
   </div>
   <div id="leaderboard" class="hidden">
     <table>
@@ -93,3 +132,56 @@
   </div>
 </body>
 </html>
+
+<script>
+  let abilities = document.getElementById("abilities");
+  let mage = document.getElementById("abilities-mage");
+  let rogue = document.getElementById("abilities-rogue");
+  let warrior = document.getElementById("abilities-warrior");
+  let brute = document.getElementById("abilities-brute");
+
+  function showAbilities() {
+    abilities.classList.remove('hidden');
+  }
+  function hideAbilities() {
+    abilities.classList.add('hidden');
+  }
+  function clearAbilities() {
+    hideMage();
+    hideRogue();
+    hideWarrior();
+    hideBrute();
+  }
+
+  function showMage() {
+    clearAbilities();
+    mage.classList.remove('hidden');
+  }
+  function hideMage() {
+    mage.classList.add('hidden');
+  }
+
+  function showRogue() {
+    clearAbilities();
+    rogue.classList.remove('hidden');
+  }
+  function hideRogue() {
+    rogue.classList.add('hidden');
+  }
+
+  function showWarrior() {
+    clearAbilities();
+    warrior.classList.remove('hidden');
+  }
+  function hideWarrior() {
+    warrior.classList.add('hidden');
+  }
+
+  function showBrute() {
+    clearAbilities();
+    brute.classList.remove('hidden');
+  }
+  function hideBrute() {
+    brute.classList.add('hidden');
+  }
+</script>

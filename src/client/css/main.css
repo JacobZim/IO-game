@@ -49,29 +49,40 @@ button:focus {
   padding: 20px 30px;
   background-color: white;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   border-radius: 5px;
   text-align: center;
 }
-#play-menu #title {
+
+#play-menu #menu #title {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
   padding: auto;
 }
 
-#play-menu p {
+#play-menu #menu p {
   margin-bottom: 0;
 }
 
-#play-menu .small-image {
+.small-image {
   width: 40px;
   height: 40px;
   margin: auto 10px auto 10px;
 }
+.medium-image {
+  width: 50px;
+  height: 50px;
+  margin: auto 10px auto 10px;
+}
+.large-image {
+  width: 60px;
+  height: 60px;
+  margin: auto 10px auto 10px;
+}
 
-#play-menu input {
+#play-menu #menu input {
   font-size: 18px;
   outline: none;
   border: none;
@@ -81,8 +92,43 @@ button:focus {
   text-align: center;
 }
 
-#play-menu input:hover {
+#play-menu #menu input:hover {
   outline: none;
+}
+
+#play-menu #abilities {
+  border-left: 4px solid lightgray;
+  padding-left: 10px;
+  margin-left: 4px;
+  width:50%;
+}
+
+#play-menu #abilities #title {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  padding: auto;
+}
+
+#play-menu #abilities p {
+  margin-bottom: 0;
+}
+
+#play-menu #abilities input {
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+  padding: 3px;
+  text-align: center;
+}
+
+#play-menu #abilities input:hover {
+  outline: none;
+}
+button {
+  border: 1px solid lightgray;
 }
 
 #leaderboard {

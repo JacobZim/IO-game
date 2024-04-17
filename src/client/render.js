@@ -254,7 +254,9 @@ function renderProjectile(me, projectile) {
     } else if(classType == Constants.CLASS_TYPES.MAGIC_WALL) {
       asset = getAsset('blueMagicWall.svg');
     } else if(classType == Constants.CLASS_TYPES.HEALING_RING) {
-      asset = getAsset('blueHealingRing.svg');
+      asset = getAsset('blueHealingRing.svg')
+    } else if(classType == Constants.CLASS_TYPES.GROUND_POUND) {
+      asset = getAsset('blueGroundPound.svg');
     } else if(classType == Constants.CLASS_TYPES.SWORD_SWIPE) {
       asset = getAsset('rectangle.svg');
     }  else asset = getAsset('bullet.svg');
@@ -267,6 +269,8 @@ function renderProjectile(me, projectile) {
       asset = getAsset('redMagicWall.svg');
     } else if(classType == Constants.CLASS_TYPES.HEALING_RING) {
       asset = getAsset('redHealingRing.svg')
+    } else if(classType == Constants.CLASS_TYPES.GROUND_POUND) {
+      asset = getAsset('redGroundPound.svg')
     } else if(classType == Constants.CLASS_TYPES.SWORD_SWIPE) {
       asset = getAsset('rectangle.svg');
     } else asset = getAsset('bullet.svg');

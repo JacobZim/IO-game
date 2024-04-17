@@ -254,6 +254,7 @@ class RogueSwipe extends DiscreteProjectileRect {
     this.pierce = Constants.PROJ_PIERCE.ROGUE_SWIPE;
     this.numHits = Constants.PROJ_NUM_HITS.ROGUE_SWIPE;
     this.damage = Constants.DAMAGE_TYPES.ROGUE_SWIPE;
+    this.invisible = invis;
     if (invis) {
       this.pierce *= 3;
       this.numHits += 2;
@@ -275,6 +276,23 @@ class RogueSwipe extends DiscreteProjectileRect {
   update(dt) {
     this.swipeupdate();
     return super.update(dt);
+  }
+  collide(dt, entity) {
+    if (entity.armor > this.pierce) {
+      this.currenttime = this.lifespan;
+    }
+    this.numHits -= 1;
+    this.collided.push(entity);
+    if (entity.team == this.team) {
+      return this.healing;
+    } 
+    else {
+      let damage;
+      if (this.invisible)
+        damage = entity.maxhp / 3;
+      else damage = entity.maxhp / 6;
+      return damage;
+    }
   }
 }
 
