@@ -1,10 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg width="100mm" height="100mm" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
- <g stroke-width="0">
-  <circle cx="50" cy="50" r="50" fill="#f00"/>
-  <ellipse transform="matrix(.97894 -.20413 .21419 .97679 0 0)" cx="30.977" cy="21.83" rx="10.163" ry="4.656"/>
-  <ellipse transform="matrix(-.97894 -.20413 -.21419 .97679 0 0)" cx="-66.708" cy="1.4158" rx="10.163" ry="4.656"/>
- </g>
- <path transform="translate(-.56106 5.33)" d="m78.267 58.35-27.728 20.21-27.789-20.125 10.553-32.648 34.311-0.052393z" fill="none" stroke="#000" stroke-width="4.588"/>
+
+<svg
+   width="100mm"
+   height="100mm"
+   version="1.1"
+   viewBox="0 0 100 100"
+   id="svg26675"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs26679" />
+  <g
+     stroke-width="0"
+     id="g26671">
+    <circle
+       cx="50"
+       cy="50"
+       r="50"
+       fill="#f00"
+       id="circle26665"
+       style="fill:#ff0000;fill-opacity:1" />
+    <ellipse
+       transform="matrix(.97894 -.20413 .21419 .97679 0 0)"
+       cx="30.977"
+       cy="21.83"
+       rx="10.163"
+       ry="4.656"
+       id="ellipse26667"
+       style="fill:#000000;fill-opacity:1" />
+    <ellipse
+       transform="matrix(-.97894 -.20413 -.21419 .97679 0 0)"
+       cx="-66.708"
+       cy="1.4158"
+       rx="10.163"
+       ry="4.656"
+       id="ellipse26669"
+       style="fill:#000000;fill-opacity:1" />
+  </g>
+  <path
+     style="fill:#000000;stroke:#000000;stroke-width:2.354;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;stroke-linecap:round"
+     d="M 58.200767,27.39934 70.000701,7.9472364"
+     id="path10076" />
+  <path
+     style="fill:#000000;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     d="m 57.22779,22.161742 8.696378,1.122113"
+     id="path10618" />
 </svg>
