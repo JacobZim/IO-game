@@ -149,6 +149,14 @@ button {
   text-align: center;
   padding: 2px 5px;
 }
+#scoreboard {
+  position: fixed;
+  top: 10px;
+  right: 200px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+}
 
 #disconnect-modal {
   position: fixed;

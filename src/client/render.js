@@ -49,6 +49,7 @@ function render() {
     others.forEach(renderPlayer.bind(null, me));
     renderAbilities(me);
     renderResourceBar(me);
+    // renderKills(me, kills[0],kills[1]);
   }
 
   // Rerun this render function on the next frame
@@ -70,6 +71,23 @@ function renderBackground(x, y) {
   backgroundGradient.addColorStop(1, 'gray');
   context.fillStyle = backgroundGradient;
   context.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function renderKills(me, zero, one) {
+  // let zero = kills[0];
+  // let one = kills[1];
+  console.log(zero, one);
+  zero = zero.toString();
+  one = one.toString();
+  let text = zero + ":" + one;
+  let X = text.length / 2 * 30;
+  let Y = 20;
+  const canvasX = canvas.width / 2 - X;
+  const canvasY = - Y;
+  // Draw abilities
+  context.fillStyle = 'white';
+  context.font = "48px serif";
+  context.fillText(text, canvasX, canvasY);
 }
 
 // Renders a ship at the given coordinates

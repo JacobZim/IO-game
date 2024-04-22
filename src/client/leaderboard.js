@@ -2,6 +2,8 @@ import escape from 'lodash/escape';
 
 const leaderboard = document.getElementById('leaderboard');
 const rows = document.querySelectorAll('#leaderboard table tr');
+const scoreboard = document.getElementById('scoreboard');
+const row = document.querySelectorAll('#scoreboard table tr');
 
 export function updateLeaderboard(data) {
   // This is a bit of a hacky way to do this and can get dangerous if you don't escape usernames
@@ -21,5 +23,21 @@ export function setLeaderboardHidden(hidden) {
     leaderboard.classList.add('hidden');
   } else {
     leaderboard.classList.remove('hidden');
+  }
+}
+
+export function updateScoreboard(data) {
+  // This is a bit of a hacky way to do this and can get dangerous if you don't escape usernames
+  // properly. You would probably use something like React instead if this were a bigger project.
+  row[1].innerHTML = `<td>${escape(data[0])}</td><td>${
+      data[1]
+    }</td>`;
+}
+
+export function setScoreboardHidden(hidden) {
+  if (hidden) {
+    scoreboard.classList.add('hidden');
+  } else {
+    scoreboard.classList.remove('hidden');
   }
 }

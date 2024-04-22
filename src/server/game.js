@@ -9,6 +9,7 @@ class Game {
     this.players = {};
     this.projectiles = [];
     this.teams = [0,0]; // number of players on team 0, 1
+    this.kills = [0,0]; // Team death match score tracking
     this.structures = [];
     //this.addRectangle(100, 100, 100, 100, 0);
     this.lastUpdateTime = Date.now();
@@ -48,7 +49,10 @@ class Game {
 
   removePlayer(socket) {
     if (this.players[socket.id]) {
-      this.teams[this.players[socket.id].team] -= 1;
+      let team = this.players[socket.id].team;
+      this.teams[team] -= 1;
+      if (team == 0) this.kills[1] += 1;
+      else this.kills[0] += 1;
       if (this.players[socket.id].classType == Constants.CLASS_TYPES.WARRIOR) {
         for (let i = 0; i < Constants.QUANTITIES.WARRIOR_SHIELDS; i++ ) {
           this.players[socket.id].shields[i].hp = 0;
@@ -193,7 +197,7 @@ class Game {
         this.removePlayer(socket);
       }
     });
-
+    //this.checkGameOver();
     // Send a game update to each player every other time
     if (this.shouldSendUpdate) {
       const leaderboard = this.getLeaderboard();
@@ -207,6 +211,15 @@ class Game {
       this.shouldSendUpdate = true;
     }
   }
+
+  // checkGameOver() {
+  //   let win = 5;
+  //   if (this.kills[0] >= win) {
+  //     this = new Game();
+  //   } else if (this.kills[1] >= win) {
+  //     this = new Game();
+  //   }
+  // }
 
   getLeaderboard() {
     return Object.values(this.players)
@@ -233,6 +246,7 @@ class Game {
       projectiles: nearbyProjectiles.map(b => b.serializeForUpdate()),
       structures: nearbyStructures.map(b => b.serializeForUpdate()),
       leaderboard,
+      kills: this.kills,
     };
   }
 }
